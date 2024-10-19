@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyMinerals</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/custom.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="../assets/images/icon.png">
+    <script src="https://kit.fontawesome.com/3b8f84b98f.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="../assets/images/myminerals-high-resolution-logo-transparent2.png" alt="MyMinerals Logo"
+                        class="navbar-logo-image">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Domov</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="encyclopedia.html">Encyklopédia</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="collections.html">Kolekcie</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="my-profile.html">Môj profil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about-us.html">O nás</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-5">
+        <h2 class="text-center  mb-4">Encyklopédia Minerálov</h2>
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-3 mb-4 d-flex">
+                <div class="card mineral-card flex-fill">
+                    <div class="card-body d-flex flex-column">
+                        <img src="../assets/images/amethyst.jpg" class="card-img-top" alt="Amethyst">
+                        <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center">
+                            Ametyst
+                            <span>
+                                <i class="fa-regular fa-heart" title="Pridať do obľúbených" onclick="toggleHeart(this)"></i>
+                                <i class="fas fa-plus" title="Pridať do kolekcie"></i>
+                            </span>
+                        </h5>
+                        <p style="margin: 0;"> Chemický vzorec: </p>
+                        <p class="mineral-card-formula">SiO<sub>2</sub></p>
+                        <p class="card-text">Ametyst je minerál, fanerokryštalická odroda kremeňa tmavofialovej,
+                            fialovej až červenofialovej farby. Ak sa v tej istej hornine nachádza ametyst s citrínom,
+                            nazýva sa ametrín.
+                        </p>
+                        <a href="amethyst" class="stretched-link mineral-card-link">Prečítať si viac...</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-6 col-lg-3 mb-4 d-flex">
+                <div class="card mineral-card flex-fill">
+                    <div class="card-body d-flex flex-column">
+                        <img src="../assets/images/malachite.jpg" class="card-img-top" alt="Malachite">
+                        <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center">
+                            Malachit
+                            <span>
+                                <i class="fa-regular fa-heart" title="Pridať do obľúbených" onclick="toggleHeart(this)"></i>
+                                <i class="fas fa-plus" title="Pridať do kolekcie"></i>
+                            </span>
+                        </h5>
+                        <p style="margin: 0;"> Chemický vzorec: </p>
+                        <p class="mineral-card-formula">Cu<sub>2</sub>(CO<sub>3</sub>)(OH)<sub>2</sub></p>
+                        <p class="card-text">Malachit je minerál, chemicky zásaditý dihydroxid-uhličitan meďnatý.</p>
+                        <a href="malachite" class="stretched-link mineral-card-link">Prečítať si viac...</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3 mb-4 d-flex">
+                <div class="card mineral-card flex-fill">
+                    <div class="card-body d-flex flex-column">
+                        <img src="../assets/images/sodalite.jpg" class="card-img-top" alt="Sodalite">
+                        <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center">
+                            Sodalit
+                            <span>
+                                <i class="fa-regular fa-heart" title="Pridať do obľúbených" onclick="toggleHeart(this)"></i>
+                                <i class="fas fa-plus" title="Pridať do kolekcie"></i>
+                            </span>
+
+                        </h5>
+                        <p style="margin: 0;"> Chemický vzorec: </p>
+                        <p class="mineral-card-formula">Na<sub>4</sub>(Si<sub>3</sub>Al<sub>3</sub>)O<sub>12</sub>Cl</p>
+                        <p class="card-text"> Je to alumosilikát (hlinitokremičitan) sodíka s chlórom, zaraďuje sa medzi
+                            tektosilikáty.
+                            Typická je jeho tmavomodrá farba.</p>
+                        <a href="sodalite" class="stretched-link mineral-card-link">Prečítať si viac...</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3 mb-4 d-flex">
+                <div class="card mineral-card flex-fill">
+                    <div class="card-body d-flex flex-column">
+                        <img src="../assets/images/ocean_jasper.jpg" class="card-img-top" alt="Ocean Jasper">
+                        <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center">
+                            Jaspis oceán
+                            <span>
+                                <i class="fa-regular fa-heart" title="Pridať do obľúbených" onclick="toggleHeart(this)"></i>
+                                <i class="fas fa-plus" title="Pridať do kolekcie"></i>
+                            </span>
+
+                        </h5>
+                        <p style="margin: 0;"> Chemický vzorec: </p>
+                        <p class="mineral-card-formula">SiO<sub>2</sub></p>
+                        <p class="card-text">Oceán jaspis je jedinečná varieta jaspisu, ktorá pochádza z Madagaskaru.
+                            Charakteristický je pestrosťou farieb a motívov. Najčastejšie obsahuje drobné krúžky,
+                            niekedy usporiadané do pásikov.</p>
+                        <a href="ocean-jasper" class="stretched-link mineral-card-link">Prečítať si viac...</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3 mb-4 d-flex">
+                <div class="card mineral-card flex-fill">
+                    <div class="card-body d-flex flex-column">
+                        <img src="../assets/images/rhodonite.jpg" class="card-img-top" alt="Rhodonite">
+                        <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center">
+                            Rodonit
+                            <span>
+                                <i class="fa-regular fa-heart" title="Pridať do obľúbených" onclick="toggleHeart(this)"></i>
+                                <i class="fas fa-plus" title="Pridať do kolekcie"></i>
+                            </span>
+
+                        </h5>
+                        <p style="margin: 0;"> Chemický vzorec: </p>
+                        <p class="mineral-card-formula">CaMn<sub>3</sub>Mn(Si<sub>5</sub>O<sub>15</sub>)</p>
+                        <p class="card-text">V antike rodonit chránil pocestných na ich výpravách a v stredoveku bol
+                            predovšetkým považovaný za kameň šťastia, radosti a lásky. V starom Rusku mu zasa bola
+                            pripisovaná vyššia magická sila.</p>
+                        <a href="rhodonite" class="stretched-link mineral-card-link">Prečítať si viac...</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-wrap">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul>
+                            <li>
+                                Michaela Kantorová
+                            </li>
+                            <li>
+                                © MyMinerals, 2024
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

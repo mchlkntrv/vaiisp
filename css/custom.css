@@ -6,6 +6,10 @@
   float: left;
 }
 
+.navbar-logo-image {
+    height: 35px;
+}
+
 .content {
   padding-top: 60px;
 }
@@ -59,4 +63,77 @@ body {
     background-color: #d1ddeb !important;
     border-color: #d1ddeb;
     color:#052545;
+}
+
+.card-img-top {
+    border-radius: 5px;
+    margin-bottom: 10px;
+    height: 200px;
+    width: 100%;
+    object-fit: contain;
+}
+
+.card{
+    border-radius: 10px;
+}
+.mineral-card-formula{
+    font-style: italic;
+}
+
+.mineral-card {
+    transition: transform 0.3s ease;
+}
+
+.mineral-card:hover {
+    transform: scale(1.015);
+}
+
+.mineral-card-link{
+    color: black;
+    font-style: italic;
+    text-decoration: none;
+}
+
+.mineral-card-link:hover{
+    color: black;
+}
+
+.fa-heart {
+    cursor: pointer; 
+    transition: color 0.3s ease; 
+    margin: 5px;
+}
+
+.fa-heart:hover {
+    color: red;
+}
+
+.fa-heart.filled {
+    color: red;
+}
+
+.fa-heart, .fa-plus {
+    position: relative; 
+    z-index: 1; 
+    cursor: pointer;
+}
+
+.fa-plus {
+    cursor: pointer; 
+    transition: color 0.3s ease; 
+}
+
+.fa-plus:hover {
+    color: green;
+}
+
+.fa-plus {
+    position: relative; 
+    z-index: 1; 
+    cursor: pointer;
+}
+
+.stretched-link {
+    z-index: 0;
+    margin-top: auto;
 }
