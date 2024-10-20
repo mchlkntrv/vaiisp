@@ -3,6 +3,7 @@
     border-bottom-right-radius: 7px;
     border-bottom-left-radius: 7px;
     padding: 15px;
+    z-index: 1;
 }
 
 .navbar-nav {
@@ -10,7 +11,8 @@
 }
 
 .navbar-logo-image {
-    height: 35px;
+    height: 30px;
+    margin: 5px;
 }
 
 .navbar-nav .nav-item:hover {
@@ -19,15 +21,8 @@
     transition: color 0.3s, background-color 0.3s;
 }
 
-@media (max-width: 992px) {
-    .navbar-collapse .nav-item {
-        padding: 2px 10px;
-    }
-
-    .navbar-collapse .nav-item:hover {
-        background-color: #0b335c;
-        border-radius: 5px;
-    }
+.navbar-collapse .nav-item {
+    padding: 2px 10px;
 }
 
 .navbar-toggler {
@@ -52,15 +47,20 @@
 .nav-tabs .nav-link {
     background-color: #e7f1ff;
     color: #5d7684;
-    border-radius: 0.5rem;
 }
 
 .nav-tabs .nav-link.active {
     color: #000;
 }
 
+.video-container {
+    margin-top: -5px;
+    z-index: 0;
+}
+
 .content {
     padding-top: 60px;
+    margin-top: -10%;
 }
 
 footer {
@@ -69,6 +69,7 @@ footer {
     width: 100%;
     color: #fff;
     text-align: right;
+    font-size: smaller;
 }
 
 .footer-wrap {
@@ -78,24 +79,18 @@ footer {
     border-top-right-radius: 7px;
 }
 
-.footer-link{
+.footer-link {
     text-decoration: none;
-    color:white;
+    color: white;
 }
 
-.footer-link:hover{
+.footer-link:hover {
     text-decoration: none;
     color: white;
 }
 
 main {
     padding-bottom: 60px;
-}
-
-.home-carousel img {
-    height: 40vh;
-    object-fit: cover;
-    object-position: center;
 }
 
 .mineral-info-carousel img {
@@ -106,6 +101,7 @@ main {
 
 .mineral-info-carousel .carousel-control-prev-icon,
 .mineral-info-carousel .carousel-control-next-icon {
+    color: #000;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 10%;
 }
