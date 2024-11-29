@@ -20,7 +20,6 @@ C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\staticwebassets\msbui
 C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.BlazorApp.props
 C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
-C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
 C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\scopedcss\bundle\BlazorApp.styles.css
 C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\scopedcss\projectbundle\BlazorApp.bundle.scp.css
 C:\Users\micha\Documents\vaiisp\BlazorApp\obj\Debug\net8.0\BlazorApp.dll

@@ -1,7 +1,51 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Domov</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="hero-container position-relative">
+    <div class="overlay-text position-absolute top-50 start-50 translate-middle text-center text-white">
+        <h1 class="display-4 fw-bold">Vitajte na MyMinerals</h1>
+        <p class="lead">Miesto pre najväčších zberateľov krás prírody.</p>
+    </div>
+</div>
 
-Welcome to your new app.
+<main class="home-cards-container">
+    <div class="row">
+        <div class="col-12 col-md-4 mb-4 d-flex">
+            <div class="card flex-fill">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Encyklopédia</h5>
+                    <p class="card-text">Naučte sa nové informácie o mineráloch a kameňoch z celého sveta. Objavte ich
+                        vlastnosti, lokality výskytu, chemické vzorce a iné zaujímavosti, ktoré vás prekvapia.</p>
+                    <div class="mt-auto">
+                        <NavLink class="btn btn-primary" href="/encyclopedia">Prejsť</NavLink>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4 mb-4 d-flex">
+            <div class="card flex-fill">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Kolekcie</h5>
+                    <p class="card-text">Vytvorte si vlastné kolekcie minerálov a kameňov. Ukladajte, trieďte a
+                        filtrujte svoje
+                        nálezy a vytvorte si digitálny katalóg vašich pokladov.</p>
+                    <div class="mt-auto">
+                        <NavLink class="btn btn-primary" href="/collections">Prejsť</NavLink>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4 mb-4 d-flex">
+            <div class="card flex-fill">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Môj profil</h5>
+                    <p class="card-text">Spravujte ostatné nastavenia vášho profilu.</p>
+                    <div class="mt-auto">
+                        <NavLink class="btn btn-primary" href="/my-profile">Prejsť</NavLink>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

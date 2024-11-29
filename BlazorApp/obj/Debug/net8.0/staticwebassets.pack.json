@@ -21,6 +21,66 @@
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\amethyst.jpg",
+      "PackagePath": "staticwebassets\\images\\amethyst.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\amethyst2.jpg",
+      "PackagePath": "staticwebassets\\images\\amethyst2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\amethyst3.jpg",
+      "PackagePath": "staticwebassets\\images\\amethyst3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\carousel-1.jpg",
+      "PackagePath": "staticwebassets\\images\\carousel-1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\carousel-2.jpg",
+      "PackagePath": "staticwebassets\\images\\carousel-2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\carousel-3.jpg",
+      "PackagePath": "staticwebassets\\images\\carousel-3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\collection1.webp",
+      "PackagePath": "staticwebassets\\images\\collection1.webp"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\collection2.jpg",
+      "PackagePath": "staticwebassets\\images\\collection2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\hero_bckg1.jpg",
+      "PackagePath": "staticwebassets\\images\\hero_bckg1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\hero_bckg2.jpg",
+      "PackagePath": "staticwebassets\\images\\hero_bckg2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\malachite.jpg",
+      "PackagePath": "staticwebassets\\images\\malachite.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\myminerals-high-resolution-logo-transparent2.png",
+      "PackagePath": "staticwebassets\\images\\myminerals-high-resolution-logo-transparent2.png"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\ocean_jasper.jpg",
+      "PackagePath": "staticwebassets\\images\\ocean_jasper.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\rhodonite.jpg",
+      "PackagePath": "staticwebassets\\images\\rhodonite.jpg"
+    },
+    {
+      "Id": "C:\\Users\\micha\\Documents\\vaiisp\\BlazorApp\\wwwroot\\images\\sodalite.jpg",
+      "PackagePath": "staticwebassets\\images\\sodalite.jpg"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.BlazorApp.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
