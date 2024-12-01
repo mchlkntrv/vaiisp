@@ -1,3 +1,7 @@
+using Api.Data;
+using Api.Services;
+using Api.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api
 {
@@ -7,16 +11,28 @@ namespace Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<IMineralRepository, MineralRepository>();
+            builder.Services.AddScoped<IMineralService, MineralService>();
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
+            builder.Services.AddScoped<ICollectionService, CollectionService>();
+
+            builder.Services.AddScoped<ICollectionItemRepository, CollectionItemRepository>();
+            builder.Services.AddScoped<ICollectionItemService, CollectionItemService>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -26,7 +42,6 @@ namespace Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

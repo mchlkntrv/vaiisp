@@ -1,4 +1,4 @@
-namespace MyMineral.Models
+namespace Models
 {
     public class Mineral
     {
@@ -6,5 +6,6 @@ namespace MyMineral.Models
         public string Name { get; set; }
         public string Formula { get; set; }
         public string Information { get; set; }
+
     }
 }
