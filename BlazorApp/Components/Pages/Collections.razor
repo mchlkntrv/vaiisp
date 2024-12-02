@@ -38,9 +38,39 @@
                             <img src="images/collections/@($"{collection.Id}.jpg")" alt="Náhľad kolekcie" class="img-fluid me-3"
                                  style="width: 15vh; object-fit: contain;">
                             <div class="flex-grow-1">
-                                <h5 class="card-title">@collection.Title</h5>
-                                <p class="card-text">@collection.Description</p>
+                                <h5 class="card-title">
+                                    @if (editingCollectionId == collection.Id)
+                                    {
+                                        <input type="text" @bind="editingCollectionTitle" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        @collection.Title
+                                    }
+                                </h5>
+                                <p class="card-text">
+                                    @if (editingCollectionId == collection.Id)
+                                    {
+                                        <textarea @bind="editingCollectionDescription" class="form-control"></textarea>
+                                    }
+                                    else
+                                    {
+                                        @collection.Description
+                                    }
+                                </p>
                                 <p class="text-muted">Vytvorené: @collection.CreatedAt.ToString("dd.MM.yyyy")</p>
+
+                                <div class="d-flex justify-content-end">
+                                    @if (editingCollectionId == collection.Id)
+                                    {
+                                        <button class="btn btn-success" @onclick="SaveCollectionEdit">Uložiť</button>
+                                        <button class="btn btn-secondary ms-2" @onclick="CancelEdit">Zrušiť</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-warning" @onclick="() => StartEditing(collection)">Upravit</button>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -53,6 +83,10 @@
 @code {
     private List<Collection> UserCollections;
     private bool IsLoading = true;
+
+    private int? editingCollectionId;
+    private string editingCollectionTitle;
+    private string editingCollectionDescription;
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,7 +117,40 @@
 
     private void NavigateToLoginPage()
     {
-        Console.WriteLine("Navigating to login page..."); 
         Navigation.NavigateTo("/login");
+    }
+
+    private void StartEditing(Collection collection)
+    {
+        editingCollectionId = collection.Id;
+        editingCollectionTitle = collection.Title;
+        editingCollectionDescription = collection.Description;
+    }
+
+    private async Task SaveCollectionEdit()
+    {
+        if (editingCollectionId.HasValue)
+        {
+            var updatedCollection = UserCollections.FirstOrDefault(c => c.Id == editingCollectionId);
+
+            if (updatedCollection != null)
+            {
+                updatedCollection.Title = editingCollectionTitle;
+                updatedCollection.Description = editingCollectionDescription;
+
+                var success = await CollectionService.UpdateCollectionAsync(updatedCollection);
+
+                if (success)
+                {
+                    editingCollectionId = null;
+                    StateHasChanged();
+                }
+            }
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editingCollectionId = null;
     }
 }

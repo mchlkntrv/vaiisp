@@ -12,7 +12,7 @@
     {
         private readonly ICollectionService _collectionService = collectionService;
 
-        // GET: api/Collection
+        // GET: api/collection
         [HttpGet]
         public async Task<ActionResult<List<Collection>>> GetCollections()
         {
@@ -20,7 +20,7 @@
             return Ok(collections);
         }
 
-        // GET: api/Collection/5
+        // GET: api/collection/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Collection>> GetCollection(int id)
         {
@@ -48,7 +48,7 @@
             return Ok(collections);
         }
 
-        // POST: api/Collection
+        // POST: api/collection
         [HttpPost]
         public async Task<ActionResult> CreateCollection(Collection collection)
         {
@@ -56,7 +56,7 @@
             return CreatedAtAction(nameof(GetCollection), new { id = collection.Id }, collection);
         }
 
-        // PUT: api/Collection/5
+        // PUT: api/collection/5
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateCollection(int id, Collection collection)
         {
@@ -69,7 +69,7 @@
             return NoContent();
         }
 
-        // DELETE: api/Collection/5
+        // DELETE: api/collection/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCollection(int id)
         {

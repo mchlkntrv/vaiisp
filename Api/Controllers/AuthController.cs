@@ -22,7 +22,7 @@ namespace Api.Controllers
 
             if (user == null)
             {
-                return Unauthorized("Invalid username/email or password.");
+                return Unauthorized("Nespravne meno/email alebo heslo.");
             }
 
             var claims = new List<Claim>

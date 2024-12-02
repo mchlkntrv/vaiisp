@@ -18,5 +18,11 @@ namespace BlazorApp.Services
                 return new List<Collection>();
             }
         }
+
+        public async Task<bool> UpdateCollectionAsync(Collection collection)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/collection/{collection.Id}", collection);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
