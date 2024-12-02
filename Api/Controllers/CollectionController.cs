@@ -34,6 +34,20 @@
             return Ok(collection);
         }
 
+        // GET: api/collection/user/{userId}
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetCollectionsByUserId(int userId)
+        {
+            var collections = await _collectionService.GetCollectionsByUserIdAsync(userId);
+
+            if (collections == null || !collections.Any())
+            {
+                return NotFound("Uzivatel nema ziadne kolekcie.");
+            }
+
+            return Ok(collections);
+        }
+
         // POST: api/Collection
         [HttpPost]
         public async Task<ActionResult> CreateCollection(Collection collection)

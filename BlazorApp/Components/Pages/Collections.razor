@@ -1,44 +1,89 @@
 @page "/collections"
+@inject CollectionService CollectionService
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+@rendermode InteractiveServer
 
 <PageTitle>Kolekcie</PageTitle>
 
 <main class="container my-5">
-        <h2 class="text-center mb-4">Moje Kolekcie</h2>
+    <h2 class="text-center mb-4">Moje Kolekcie</h2>
 
+    @if (IsLoading)
+    {
+        <p>Načítava sa...</p>
+    }
+    else if (UserCollections == null)
+    {
+        <p>Nemáte žiadne kolekcie.</p>
+
+        <div class="mt-4">
+            <button class="btn btn-primary" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
+        </div>
+    }
+    else
+    {
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0 text-center text-md-start">Vytvoriť novú kolekciu</h4>
-            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#createCollectionForm">
+            <button class="btn btn-primary" data-bs-toggle="collapse" aria-pressed="true">
                 <i class="fas fa-plus" title="Pridať novú kolekciu"></i>
             </button>
         </div>
 
         <div class="row">
-            <div class="col-12 mb-3">
-                <div class="card">
-                    <div class="d-flex p-3">
-                        <img src="../images/collection1.webp" alt="Náhľad kolekcie" class="img-fluid me-3"
-                            style="width: 15vh; object-fit: contain;">
-                        <div class="flex-grow-1">
-                            <h5 class="card-title">Obľúbené kamene</h5>
-                            <p class="card-text">Zoznam minerálov označených ako obľúbené.</p>
-                            <p class="text-muted">Vytvorené: 11.8.2022</p>
+            @foreach (var collection in UserCollections)
+            {
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="d-flex p-3">
+                            <img src="images/collections/@($"{collection.Id}.jpg")" alt="Náhľad kolekcie" class="img-fluid me-3"
+                                 style="width: 15vh; object-fit: contain;">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title">@collection.Title</h5>
+                                <p class="card-text">@collection.Description</p>
+                                <p class="text-muted">Vytvorené: @collection.CreatedAt.ToString("dd.MM.yyyy")</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 mb-3">
-                <div class="card">
-                    <div class="d-flex p-3">
-                        <img src="../images/amethyst2.jpg" alt="Náhľad kolekcie" class="img-fluid me-3"
-                            style="width: 15vh; object-fit: contain;">
-                        <div class="flex-grow-1">
-                            <h5 class="card-title">Zbierka z výletu do Tatier 2024</h5>
-                            <p class="card-text">Vzorky nazbierané v okolí Štrbského plesa.</p>
-                            <p class="text-muted">Vytvorené: 28.1.2024</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
+    }
+</main>
 
-    </main>
+@code {
+    private List<Collection> UserCollections;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userId = await AuthService.GetUserIdAsync();
+
+            if (userId.HasValue)
+            {
+                UserCollections = await CollectionService.GetCollectionsByUserIdAsync(userId.Value);
+            }
+            else
+            {
+                UserCollections = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+            UserCollections = null;
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged(); 
+        }
+    }
+
+    private void NavigateToLoginPage()
+    {
+        Console.WriteLine("Navigating to login page..."); 
+        Navigation.NavigateTo("/login");
+    }
+}

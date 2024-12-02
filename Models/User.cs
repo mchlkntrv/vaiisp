@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -14,5 +15,6 @@ namespace Models
         public string Role { get; set; }
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public List<Collection> Collections { get; set; }
     }
 }

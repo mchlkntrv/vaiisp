@@ -17,6 +17,7 @@ namespace Api.Controllers
             var minerals = await _mineralService.GetAllMineralsAsync();
             return Ok(minerals);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Mineral>> GetMineralById(int id)
         {

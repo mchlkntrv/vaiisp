@@ -10,7 +10,7 @@ namespace Api.Controllers
     {
         private readonly IUserService _userService = userService;
 
-        // GET: api/User
+        // GET: api/user
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
@@ -18,7 +18,7 @@ namespace Api.Controllers
             return Ok(users);
         }
 
-        // GET: api/User/5
+        // GET: api/user/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -30,7 +30,7 @@ namespace Api.Controllers
             return Ok(user);
         }
 
-        // POST: api/User
+        // POST: api/user
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -38,7 +38,7 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
-        // PUT: api/User/5
+        // PUT: api/user/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -51,7 +51,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        // DELETE: api/User/5
+        // DELETE: api/user/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {

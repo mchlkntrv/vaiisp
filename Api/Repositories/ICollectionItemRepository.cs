@@ -10,5 +10,6 @@
         Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId);
         Task CreateCollectionItemAsync(CollectionItem collectionItem);
         Task DeleteCollectionItemAsync(int collectionId, int mineralId);
+
     }
 }

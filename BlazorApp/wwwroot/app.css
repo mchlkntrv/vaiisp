@@ -94,27 +94,6 @@ body {
     color: black;
 }
 
-.fa-heart {
-    cursor: pointer;
-    transition: color 0.3s ease;
-    margin: 5px;
-}
-
-.fa-heart:hover {
-    color: red;
-}
-
-.fa-heart.filled {
-    color: red;
-}
-
-.fa-heart,
-.fa-plus {
-    position: relative;
-    z-index: 1;
-    cursor: pointer;
-}
-
 .stretched-link {
     z-index: 0;
     margin-top: auto;

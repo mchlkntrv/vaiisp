@@ -44,5 +44,12 @@
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<Collection>> GetCollectionsByUserIdAsync(int userId)
+        {
+            return await _context.Collections
+                .Where(c => c.OwnerId == userId)
+                .ToListAsync();
+        }
     }
 }

@@ -33,5 +33,9 @@
         {
             await _collectionRepository.DeleteCollectionAsync(id);
         }
+        public async Task<IEnumerable<Collection>> GetCollectionsByUserIdAsync(int userId)
+        {
+            return await _collectionRepository.GetCollectionsByUserIdAsync(userId);
+        }
     }
 }
