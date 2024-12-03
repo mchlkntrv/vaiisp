@@ -24,5 +24,21 @@ namespace BlazorApp.Services
             var response = await _httpClient.PutAsJsonAsync($"api/collection/{collection.Id}", collection);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<Collection> CreateCollectionAsync(Collection collection)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/collection", collection);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<Collection>();
+            }
+            return null;
+        }
+
+        public async Task<bool> DeleteCollectionAsync(int collectionId)
+        {
+            var response = await _httpClient.DeleteAsync($"api/collection/{collectionId}");
+            return response.IsSuccessStatusCode;
+        }
     }
 }

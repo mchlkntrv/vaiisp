@@ -3,45 +3,45 @@
 @inject AuthService AuthService
 @inject NavigationManager Navigation
 
+@rendermode InteractiveServer
 
 <PageTitle>Login</PageTitle>
 
-<main class="container my-5">
-    <h2 class="text-center mb-4">Prihláste sa do svojho účtu</h2>
+<div class="page d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center mb-4">Prihláste sa do svojho účtu</h2>
 
-    <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-        <div class="form-group my-2">
-            <label for="usernameOrEmail">Používateľské meno alebo e-mail</label>
-            <InputText id="usernameOrEmail" class="form-control" @bind-Value="loginModel.UsernameOrEmail" />
-        </div>
-
-        <div class="form-group my-2">
-            <label for="password">Heslo</label>
-            <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
-        </div>
-
-        <button type="submit" class="btn btn-primary my-4" disabled="@isLoading">Prihlásiť sa</button>
-    </EditForm>
-
-    @if (isLoginFailed)
-    {
-        <div class="alert alert-danger mt-3">
-            Nesprávne používateľske meno/email alebo heslo.
-        </div>
-    }
-
-    @if (isLoading)
-    {
-        <div class="text-center mt-3">
-            <div class="spinner-border" role="status">
-                <span class="sr-only">Načítava sa...</span>
+            <div class="form-group my-3">
+                <label for="usernameOrEmail" class="form-label">Používateľské meno alebo e-mail</label>
+                <InputText id="usernameOrEmail" class="form-control" @bind-Value="loginModel.UsernameOrEmail" placeholder="Zadajte meno alebo e-mail" />
             </div>
-        </div>
-    }
-</main>
+
+            <div class="form-group my-3">
+                <label for="password" class="form-label">Heslo</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" placeholder="Zadajte heslo" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block w-100 mt-3" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                }
+                Prihlásiť sa
+            </button>
+        </EditForm>
+
+        @if (isLoginFailed)
+        {
+            <div class="alert alert-danger mt-3" role="alert">
+                Nesprávne používateľské meno/email alebo heslo.
+            </div>
+        }
+    </div>
+</div>
 
 @code {
     [SupplyParameterFromForm]
@@ -50,10 +50,12 @@
 
     private bool isLoginFailed = false;
     private bool isLoading = false;
-    private int? userIdToSet;
 
     private async Task HandleLogin()
     {
+        isLoading = true;
+        StateHasChanged();
+
         var isLoggedIn = await AuthService.LoginAsync(loginModel);
 
         if (isLoggedIn)
@@ -64,5 +66,8 @@
         {
             isLoginFailed = true;
         }
+
+        isLoading = false;
+        StateHasChanged();
     }
 }

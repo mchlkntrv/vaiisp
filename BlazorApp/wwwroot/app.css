@@ -1,3 +1,4 @@
+
 .hero-container {
     height: 60vh;
     display: flex;
@@ -20,7 +21,9 @@
 }
 
 main {
-    padding-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
 }
 
 .mineral-info-carousel img {
@@ -45,7 +48,7 @@ main {
 }
 
 body {
-    background: linear-gradient(to bottom, #fff, #d1ddeb);
+    background: linear-gradient(to bottom, #fff, #ddeef5);
 }
 
 .btn-primary {
@@ -56,6 +59,20 @@ body {
 .btn-primary:hover {
     background-color: #d1ddeb !important;
     border-color: #d1ddeb;
+    color: #052545;
+}
+
+.btn-primary:focus {
+    background-color: #052545;
+    border-color: #052545;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.btn-primary:focus:hover {
+    background-color: #d1ddeb !important;
+    border-color: #d1ddeb;
+    outline: none;
     color: #052545;
 }
 
@@ -76,9 +93,9 @@ body {
     transition: transform 0.3s ease;
 }
 
-.mineral-card:hover {
-    transform: scale(1.015);
-}
+    .mineral-card:hover {
+        transform: scale(1.015);
+    }
 
 .mineral-card-formula {
     font-style: italic;
@@ -90,9 +107,9 @@ body {
     text-decoration: none;
 }
 
-.mineral-card-link:hover {
-    color: black;
-}
+    .mineral-card-link:hover {
+        color: black;
+    }
 
 .stretched-link {
     z-index: 0;

@@ -1,0 +1,7 @@
+-export do csv
+-pridanie favourites
+-pagination
+-sortovanie/filtrovanie kolekcii
+-vyhladavanie
+-dark mode
+-zladiť css farby, buttony etc
