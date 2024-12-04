@@ -16,7 +16,7 @@
             <button class="btn btn-primary" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
         </div>
     }
-    else if (userCollections == null || userCollections.Count() == 0)
+    else if (userCollections == null || !userCollections.Any())
     {
         <p>Nemáte žiadne kolekcie.</p>
     }
@@ -65,16 +65,19 @@
                     <div class="modal-body">
                         <EditForm Model="@newCollection" OnValidSubmit="CreateCollection">
                             <DataAnnotationsValidator />
-                            <ValidationSummary />
 
                             <div class="form-group mb-3">
                                 <label for="title">Názov kolekcie</label>
                                 <InputText id="title" class="form-control" @bind-Value="newCollection.Title" />
+                                <ValidationMessage For="@(() => editedCollection.Title)" />
+
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="description">Popis</label>
                                 <InputTextArea id="description" class="form-control" @bind-Value="newCollection.Description" />
+                                <ValidationMessage For="@(() => editedCollection.Description)" />
+
                             </div>
 
                             <button type="submit" class="btn btn-primary">Uložiť</button>
@@ -97,16 +100,19 @@
                     <div class="modal-body">
                         <EditForm Model="@editedCollection" OnValidSubmit="SaveCollectionEdit">
                             <DataAnnotationsValidator />
-                            <ValidationSummary />
 
                             <div class="form-group mb-3">
                                 <label for="title">Názov kolekcie</label>
                                 <InputText id="title" class="form-control" @bind-Value="editedCollection.Title" />
+                                <ValidationMessage For="@(() => editedCollection.Title)" />
+
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="description">Popis</label>
                                 <InputTextArea id="description" class="form-control" @bind-Value="editedCollection.Description" />
+                                <ValidationMessage For="@(() => editedCollection.Description)" />
+
                             </div>
 
                             <button type="submit" class="btn btn-primary">Uložiť</button>
@@ -193,13 +199,9 @@
 
         if (createdCollection != null)
         {
-            userCollections?.Add(createdCollection);
+            await ReloadCollections();
             isCreateModalOpened = false;
             StateHasChanged();
-        }
-        else
-        {
-            Console.Error.WriteLine("error");
         }
     }
 
@@ -227,12 +229,7 @@
 
         if (success)
         {
-            var collection = userCollections?.FirstOrDefault(c => c.Id == editedCollection.Id);
-            if (collection != null)
-            {
-                collection.Title = editedCollection.Title;
-                collection.Description = editedCollection.Description;
-            }
+            await ReloadCollections();
             isEditModalOpened = false;
             StateHasChanged();
         }
@@ -258,15 +255,18 @@
 
             if (success)
             {
-                userCollections?.Remove(collectionToDelete);
+                await ReloadCollections();
                 StateHasChanged();
+                CloseDeleteModal();
             }
-            else
-            {
-                Console.Error.WriteLine("error");
-            }
+        }
+    }
 
-            CloseDeleteModal();
+    private async Task ReloadCollections()
+    {
+        if (userId.HasValue)
+        {
+            userCollections = await CollectionService.GetCollectionsByUserIdAsync(userId.Value);
         }
     }
 }

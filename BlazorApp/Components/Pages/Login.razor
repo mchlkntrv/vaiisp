@@ -13,7 +13,6 @@
 
         <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
             <DataAnnotationsValidator />
-            <ValidationSummary />
 
             <div class="form-group my-3">
                 <label for="usernameOrEmail" class="form-label">Používateľské meno alebo e-mail</label>
@@ -44,9 +43,7 @@
 </div>
 
 @code {
-    [SupplyParameterFromForm]
-    private LoginModel? loginModel { get; set; }
-    protected override void OnInitialized() => loginModel ??= new();
+    private LoginModel loginModel = new();
 
     private bool isLoginFailed = false;
     private bool isLoading = false;

@@ -12,7 +12,10 @@ namespace Models
         public int OwnerId { get; set; }
 
         [Required(ErrorMessage = "Vyplòte názov kolekcie.")]
+        [StringLength(50, ErrorMessage = "Názov kolekcie môe ma najviac 50 znakov.")]
         public string Title { get; set; }
+        [StringLength(1000, ErrorMessage = "Popis kolekcie môe ma najviac 1000 znakov.")]
+
         public string? Description { get; set; }
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;

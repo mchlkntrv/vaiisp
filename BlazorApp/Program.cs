@@ -17,7 +17,7 @@ builder.Services.AddHttpClient("Api", client =>
 {
     return new HttpClientHandler
     {
-        UseCookies = true, 
+        UseCookies = true,
         CookieContainer = new CookieContainer(),
     };
 });
@@ -38,10 +38,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/auth/login";
-        options.LogoutPath = "/auth/logout"; 
+        options.LogoutPath = "/auth/logout";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
-        options.ExpireTimeSpan = TimeSpan.FromHours(1); 
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
         options.SlidingExpiration = true;
     });
 

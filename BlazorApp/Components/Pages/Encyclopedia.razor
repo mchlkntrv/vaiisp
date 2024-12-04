@@ -1,12 +1,21 @@
 @page "/encyclopedia"
 @inject MineralService MineralService
+@inject UserService UserService
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <PageTitle>Encyklopédia Minerálov</PageTitle>
 
 <main class="container my-4">
     <h2 class="text-center mb-4">Encyklopédia Minerálov</h2>
-    
+
+    @if (isAdmin)
+    {
+        <div class="d-flex justify-content-end mb-3">
+            <a class="btn btn-primary" href="/add-mineral">Pridať nový minerál</a>
+        </div>
+    }
+
     @if (minerals == null)
     {
         <p>Načítava sa...</p>
@@ -31,6 +40,13 @@
                             <p class="card-text">@mineral.Information</p>
                             <a href="amethyst.html" class="stretched-link mineral-card-link">Prečítať si viac...</a>
                         </div>
+                        @if (isAdmin)
+                        {
+                            <div class="card-footer d-flex justify-content-between">
+                                <button class="btn btn-sm btn-warning" @onclick="() => EditMineral(mineral.Id)">Upraviť</button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteMineral(mineral.Id)">Odstrániť</button>
+                            </div>
+                        }
                     </div>
                 </div>
             }
@@ -40,9 +56,25 @@
 
 @code {
     private List<Mineral>? minerals;
+    private bool isAdmin = true;
 
     protected override async Task OnInitializedAsync()
     {
+        //isAdmin = await UserService.IsUserAdminAsync();
         minerals = await MineralService.GetMineralsAsync();
+    }
+
+    private async Task DeleteMineral(int id)
+    {
+        var success = await MineralService.DeleteMineralAsync(id);
+        if (success)
+        {
+            minerals = await MineralService.GetMineralsAsync();
+        }
+    }
+
+    private void EditMineral(int id)
+    {
+        Navigation.NavigateTo($"/edit-mineral/{id}");
     }
 }

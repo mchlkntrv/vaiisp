@@ -6,9 +6,9 @@ namespace Api.Repositories
     {
         Task<List<Mineral>> GetAllAsync();
         Task<Mineral> GetByIdAsync(int id);
+        Task<Mineral?> GetByNameAsync(string name);
         Task AddAsync(Mineral mineral);
         Task UpdateAsync(Mineral mineral);
         Task DeleteAsync(int id);
     }
-
 }

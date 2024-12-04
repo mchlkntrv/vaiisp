@@ -39,5 +39,11 @@ namespace Api.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<User> GetUserByUsernameOrEmailAsync(string username, string email)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username || u.Email == email);
+        }
     }
 }

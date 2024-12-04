@@ -1,6 +1,4 @@
 ﻿using Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Api.Services
 {
@@ -11,5 +9,6 @@ namespace Api.Services
         Task CreateUserAsync(User user);
         Task UpdateUserAsync(User user);
         Task DeleteUserAsync(int id);
+        //Task<bool> RegisterUserAsync(RegistrationModel registrationModel);
     }
 }

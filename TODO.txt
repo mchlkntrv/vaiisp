@@ -1,4 +1,5 @@
 -export do csv
+-indexy pre chemicke vzorce
 -pridanie favourites
 -pagination
 -sortovanie/filtrovanie kolekcii

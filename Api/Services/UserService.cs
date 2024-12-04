@@ -1,4 +1,5 @@
 ﻿using Api.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,5 +34,14 @@ namespace Api.Services
         {
             await _userRepository.DeleteUserAsync(id);
         }
+
+        //public async Task<bool> RegisterUserAsync(RegistrationModel registrationModel)
+        //{
+        //}
+
+
+        //private bool IsValidPassword(string password)
+        //{
+        //}
     }
 }

@@ -9,11 +9,7 @@
 <main class="container my-5">
     <h2 class="text-center mb-4">Môj profil</h2>
 
-    @if (IsLoading)
-    {
-        <p>Načítava sa...</p>
-    }
-    else if (user != null)
+    @if (user != null)
     {
         <div>
             <h3>@user.FullName</h3>
@@ -37,45 +33,31 @@
 </main>
 
 @code {
-    private User user;
+    private User? user;
     private bool IsLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            var userId = await AuthenticationService.GetUserIdAsync();
+        var userId = await AuthenticationService.GetUserIdAsync();
 
-            if (userId.HasValue)
-            {
-                user = await UserService.GetUserByIdAsync(userId.Value);
-            }
-            else
-            {
-                user = null;
-            }
-        }
-        catch (Exception ex)
+        if (userId.HasValue)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-            user = null;  
+            user = await UserService.GetUserByIdAsync(userId.Value);
         }
-        finally
+        else
         {
-            IsLoading = false;
-            StateHasChanged(); 
+            user = null;
         }
     }
 
     private async Task HandleLogout()
     {
         await AuthenticationService.LogoutAsync();
-        Navigation.NavigateTo("/login"); 
+        NavigateToLoginPage();
     }
 
     private void NavigateToLoginPage()
     {
-        Console.WriteLine("Navigating to login page..."); 
         Navigation.NavigateTo("/login");
     }
 }

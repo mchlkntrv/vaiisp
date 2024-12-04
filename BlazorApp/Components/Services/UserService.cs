@@ -20,5 +20,10 @@ namespace BlazorApp.Services
             }
         }
 
+        //TODO: PREROBIT NEFUNGUJE
+        //public async Task<bool> RegisterUserAsync(RegistrationModel registrationModel)
+        //{
+        //}
+
     }
 }

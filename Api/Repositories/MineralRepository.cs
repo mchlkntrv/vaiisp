@@ -12,6 +12,12 @@ namespace Api.Repositories
 
         public async Task<Mineral> GetByIdAsync(int id) => await _context.Minerals.FindAsync(id);
 
+        public async Task<Mineral?> GetByNameAsync(string name)
+        {
+            return await _context.Minerals
+                .FirstOrDefaultAsync(m => m.Name.ToLower() == name.ToLower());
+        }
+
         public async Task AddAsync(Mineral mineral)
         {
             _context.Minerals.Add(mineral);

@@ -11,12 +11,12 @@ namespace Api.Services
         {
             var user = await _authRepository.GetUserByUsernameOrEmailAsync(usernameOrEmail);
 
-            if (user == null || user.PasswordHash != password) 
+            if (user == null || user.PasswordHash != password)
             {
-                return null; 
+                return null;
             }
 
-            return user; 
+            return user;
         }
     }
 }

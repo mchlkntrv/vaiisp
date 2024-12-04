@@ -3,6 +3,8 @@ using Api.Services;
 using Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Models;
 
 namespace Api
 {
@@ -30,6 +32,9 @@ namespace Api
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
 
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
             builder.Services.AddControllers();
 
 
@@ -48,21 +53,21 @@ namespace Api
 
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/api/auth/login"; 
-        options.LogoutPath = "/api/auth/logout"; 
-        options.ExpireTimeSpan = TimeSpan.FromHours(1); 
-    });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/api/auth/login";
+                    options.LogoutPath = "/api/auth/logout";
+                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                });
 
             var app = builder.Build();
             app.UseCors();
 
             app.UseCors(policy =>
-    policy.WithOrigins("http://localhost:5023")
-          .AllowAnyHeader()
-          .AllowAnyMethod()
-          .AllowCredentials());
+                policy.WithOrigins("http://localhost:5023")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials());
 
 
             if (app.Environment.IsDevelopment())

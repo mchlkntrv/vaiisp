@@ -10,7 +10,7 @@ namespace Api.Controllers
     {
         private readonly IMineralService _mineralService = mineralService;
 
-        // GET: api/mineral
+        // GET: api/minerals
         [HttpGet]
         public async Task<ActionResult<List<Mineral>>> GetAllMinerals()
         {
@@ -18,6 +18,7 @@ namespace Api.Controllers
             return Ok(minerals);
         }
 
+        // GET: api/minerals/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Mineral>> GetMineralById(int id)
         {
@@ -30,21 +31,25 @@ namespace Api.Controllers
             return Ok(mineral);
         }
 
-        // POST: api/mineral
+        // POST: api/minerals
         [HttpPost]
-        public async Task<ActionResult<Mineral>> CreateMineral(Mineral mineral)
+        public async Task<ActionResult<Mineral>> AddMineral(Mineral mineral)
         {
             if (mineral == null)
             {
                 return BadRequest();
             }
 
-            await _mineralService.CreateMineralAsync(mineral);
+            var result = await _mineralService.AddMineralAsync(mineral);
+            if (!result)
+            {
+                return BadRequest();
+            }
 
             return CreatedAtAction(nameof(GetMineralById), new { id = mineral.Id }, mineral);
         }
 
-        // PUT: api/mineral/5
+        // PUT: api/minerals/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMineral(int id, Mineral mineral)
         {
@@ -59,11 +64,11 @@ namespace Api.Controllers
                 return NotFound();
             }
 
-            await _mineralService.UpdateMineralAsync(mineral);
+            await _mineralService.UpdateMineralAsync(id, mineral);
             return NoContent();
         }
 
-        // DELETE: api/mineral/5
+        // DELETE: api/minerals/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMineral(int id)
         {
