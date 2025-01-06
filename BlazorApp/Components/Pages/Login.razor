@@ -1,0 +1,79 @@
+﻿@page "/login"
+
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@rendermode InteractiveServer
+
+<PageTitle>Login</PageTitle>
+
+<div class="page d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center mb-4">Prihláste sa do svojho účtu</h2>
+
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
+            <DataAnnotationsValidator />
+
+            <div class="form-group my-3">
+                <label for="usernameOrEmail" class="form-label">Používateľské meno alebo e-mail</label>
+                <InputText id="usernameOrEmail" class="form-control" @bind-Value="loginModel.UsernameOrEmail" placeholder="Zadajte meno alebo e-mail" />
+            </div>
+
+            <div class="form-group my-3">
+                <label for="password" class="form-label">Heslo</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" placeholder="Zadajte heslo" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block w-100 mt-3" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                }
+                Prihlásiť sa
+            </button>
+        </EditForm>
+
+        @if (isLoginFailed)
+        {
+            <div class="alert alert-danger mt-3" role="alert">
+                Nesprávne používateľské meno/email alebo heslo.
+            </div>
+        }
+
+        <div class="text-center mt-3">
+            <button class="btn btn-secondary btn-block w-100" @onclick="NavigateToRegisterPage">Registrovať sa</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+
+    private bool isLoginFailed = false;
+    private bool isLoading = false;
+
+    private async Task HandleLogin()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        var isLoggedIn = await AuthService.LoginAsync(loginModel);
+
+        if (isLoggedIn)
+        {
+            Navigation.NavigateTo("/collections");
+        }
+        else
+        {
+            isLoginFailed = true;
+        }
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private void NavigateToRegisterPage()
+    {
+        Navigation.NavigateTo("/register");
+    }
+}

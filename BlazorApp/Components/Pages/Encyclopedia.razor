@@ -1,0 +1,80 @@
+@page "/encyclopedia"
+@inject MineralService MineralService
+@inject UserService UserService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Encyklopédia Minerálov</PageTitle>
+
+<main class="container my-4">
+    <h2 class="text-center mb-4">Encyklopédia Minerálov</h2>
+
+    @if (isAdmin)
+    {
+        <div class="d-flex justify-content-end mb-3">
+            <a class="btn btn-primary" href="/add-mineral">Pridať nový minerál</a>
+        </div>
+    }
+
+    @if (minerals == null)
+    {
+        <p>Načítava sa...</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var mineral in minerals)
+            {
+                <div class="col-sm-6 col-md-6 col-lg-3 mb-4 d-flex">
+                    <div class="card mineral-card flex-fill">
+                        <div class="card-body d-flex flex-column">
+                            <img src="@($"images/{mineral.Name}.jpg")" class="card-img-top" alt="@mineral.Name">
+                            <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center">
+                                @mineral.Name
+                                <span>
+                                    <i class="fa-regular fa-heart" title="Pridať do obľúbených" onclick="toggleHeart(this)"></i>
+                                </span>
+                            </h5>
+                            <p style="margin: 0;"> Chemický vzorec: </p>
+                            <p class="mineral-card-formula">@mineral.Formula</p>
+                            <p class="card-text">@mineral.Information</p>
+                            <a href="amethyst.html" class="stretched-link mineral-card-link">Prečítať si viac...</a>
+                        </div>
+                        @if (isAdmin)
+                        {
+                            <div class="card-footer d-flex justify-content-between">
+                                <button class="btn btn-sm btn-warning" @onclick="() => EditMineral(mineral.Id)">Upraviť</button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteMineral(mineral.Id)">Odstrániť</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</main>
+
+@code {
+    private List<Mineral>? minerals;
+    private bool isAdmin = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAdmin = await UserService.IsUserAdminAsync();
+        minerals = await MineralService.GetMineralsAsync();
+    }
+
+    private async Task DeleteMineral(int id)
+    {
+        var success = await MineralService.DeleteMineralAsync(id);
+        if (success)
+        {
+            minerals = await MineralService.GetMineralsAsync();
+        }
+    }
+
+    private void EditMineral(int id)
+    {
+        Navigation.NavigateTo($"/edit-mineral/{id}");
+    }
+}

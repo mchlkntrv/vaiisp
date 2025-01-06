@@ -1,0 +1,78 @@
+﻿@page "/edit-mineral/{id:int}"
+@inject MineralService MineralService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Upraviť Minerál</PageTitle>
+
+<div class="container my-4">
+    <h2 class="text-center mb-4">Upraviť Minerál</h2>
+
+    <EditForm Model="@mineral" OnValidSubmit="HandleSubmit" FormName="EditMineralForm">
+        <DataAnnotationsValidator />
+
+        <div class="form-group mb-3">
+            <label for="name" class="form-label">Názov minerálu</label>
+            <InputText id="name" class="form-control" @bind-Value="mineral.Name" />
+            <ValidationMessage For="@(() => mineral.Name)" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="formula" class="form-label">Chemický vzorec</label>
+            <InputText id="formula" class="form-control" @bind-Value="mineral.Formula" />
+            <ValidationMessage For="@(() => mineral.Formula)" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="information" class="form-label">Informácie</label>
+            <InputTextArea id="information" class="form-control" @bind-Value="mineral.Information" />
+            <ValidationMessage For="@(() => mineral.Information)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upraviť minerál</button>
+    </EditForm>
+
+    @if (submissionFailed)
+    {
+        <div class="alert alert-danger mt-3">
+            Nepodarilo sa upraviť minerál. Skúste to znova.
+        </div>
+    }
+    else if (submissionSucceeded)
+    {
+        <div class="alert alert-success mt-3">
+            Minerál bol úspešne upravený.
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Mineral mineral = new();
+    private bool submissionFailed = false;
+    private bool submissionSucceeded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        mineral = await MineralService.GetMineralByIdAsync(Id);
+    }
+
+    private async Task HandleSubmit()
+    {
+        submissionFailed = false;
+        submissionSucceeded = false;
+
+        var wasUpdated = await MineralService.UpdateMineralAsync(mineral);
+
+        if (wasUpdated)
+        {
+            submissionSucceeded = true;
+        }
+        else
+        {
+            submissionFailed = true;
+        }
+    }
+}

@@ -1,0 +1,69 @@
+﻿@page "/my-profile"
+@inject UserService UserService
+@inject AuthService AuthenticationService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Môj profil</PageTitle>
+
+<main class="container my-5">
+    <h2 class="text-center mb-4">Môj profil</h2>
+
+    @if (user != null)
+    {
+        <div>
+            <h3>@user.FullName</h3>
+            <p>Používateľské meno: @user.Username</p>
+            <p>Email: @user.Email</p>
+            <p>Status: @user.Role</p>
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-secondary" @onclick="HandleLogout">Odhlásiť sa</button>
+        </div>
+    }
+    else
+    {
+        <p>Pre zobrazenie profilu sa prihláste.</p>
+
+        <div class="mt-4">
+            <button class="btn btn-primary" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
+            <button class="btn btn-secondary ml-2" @onclick="NavigateToRegisterPage">Registrovať sa</button>
+        </div>
+    }
+</main>
+
+@code {
+    private User? user;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = await AuthenticationService.GetUserIdAsync();
+
+        if (userId.HasValue)
+        {
+            user = await UserService.GetUserByIdAsync(userId.Value);
+        }
+        else
+        {
+            user = null;
+        }
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthenticationService.LogoutAsync();
+        NavigateToLoginPage();
+    }
+
+    private void NavigateToLoginPage()
+    {
+        Navigation.NavigateTo("/login");
+    }
+
+    private void NavigateToRegisterPage()
+    {
+        Navigation.NavigateTo("/register");
+    }
+}

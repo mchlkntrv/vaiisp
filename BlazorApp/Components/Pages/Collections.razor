@@ -1,0 +1,278 @@
+@page "/collections"
+@inject CollectionService CollectionService
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+@rendermode InteractiveServer
+
+<PageTitle>Kolekcie</PageTitle>
+
+<main class="container my-5">
+    <h2 class="text-center mb-4">Moje Kolekcie</h2>
+
+    @if (!isLoggedIn)
+    {
+        <p>Pre zobrazenie kolekcii sa prihláste.</p>
+        <div class="mt-4">
+            <button class="btn btn-primary" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
+            <button class="btn btn-secondary ml-2" @onclick="NavigateToRegisterPage">Registrovať sa</button>
+        </div>
+    }
+    else if (userCollections == null || !userCollections.Any())
+    {
+        <p>Nemáte žiadne kolekcie.</p>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-primary" @onclick="OpenCreateModal">
+                <i class="fas fa-plus" title="Pridať novú kolekciu"></i>
+            </button>
+        </div>
+
+        <div class="row">
+            @foreach (var collection in userCollections)
+            {
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="d-flex p-3">
+                            <img src="images/collections/@($"{collection.Id}.jpg")" alt="Náhľad kolekcie" class="img-fluid me-3"
+                                 style="width: 15vh; object-fit: contain;">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title">@collection.Title</h5>
+                                <p class="card-text">@collection.Description</p>
+                                <p class="text-muted">Vytvorené: @collection.CreatedAt.ToString("dd.MM.yyyy")</p>
+
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-primary" @onclick="() => OpenEditModal(collection)">Upraviť</button>
+                                    <button class="btn btn-warning ms-2" @onclick="() => ShowDeleteConfirmation(collection)">Vymazať</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (isCreateModalOpened)
+    {
+        <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Vytvoriť novú kolekciu</h5>
+                        <button type="button" class="btn-close" @onclick="CloseCreateModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Model="@newCollection" OnValidSubmit="CreateCollection">
+                            <DataAnnotationsValidator />
+
+                            <div class="form-group mb-3">
+                                <label for="title">Názov kolekcie</label>
+                                <InputText id="title" class="form-control" @bind-Value="newCollection.Title" />
+                                <ValidationMessage For="@(() => newCollection.Title)" />
+
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="description">Popis</label>
+                                <InputTextArea id="description" class="form-control" @bind-Value="newCollection.Description" />
+                                <ValidationMessage For="@(() => newCollection.Description)" />
+
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Uložiť</button>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isEditModalOpened)
+    {
+        <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upraviť kolekciu</h5>
+                        <button type="button" class="btn-close" @onclick="CloseEditModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Model="@editedCollection" OnValidSubmit="SaveCollectionEdit">
+                            <DataAnnotationsValidator />
+
+                            <div class="form-group mb-3">
+                                <label for="title">Názov kolekcie</label>
+                                <InputText id="title" class="form-control" @bind-Value="editedCollection.Title" />
+                                <ValidationMessage For="@(() => editedCollection.Title)" />
+
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="description">Popis</label>
+                                <InputTextArea id="description" class="form-control" @bind-Value="editedCollection.Description" />
+                                <ValidationMessage For="@(() => editedCollection.Description)" />
+
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Uložiť</button>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isDeleteModalOpened)
+    {
+        <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Potvrdiť vymazanie</h5>
+                        <button type="button" class="btn-close" @onclick="CloseDeleteModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Chcete naozaj vymazať túto kolekciu?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">Nie</button>
+                        <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteCollection">Áno</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</main>
+
+@code {
+    private List<Collection>? userCollections;
+    private bool isLoggedIn = false;
+    private int? userId;
+
+    private Collection newCollection = new();
+    private bool isCreateModalOpened = false;
+
+    private Collection editedCollection = new Collection();
+    private bool isEditModalOpened = false;
+
+    private bool isDeleteModalOpened = false;
+    private Collection? collectionToDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await AuthService.GetUserIdAsync();
+
+        if (userId.HasValue)
+        {
+            isLoggedIn = true;
+            userCollections = await CollectionService.GetCollectionsByUserIdAsync(userId.Value);
+        }
+        else
+        {
+            userCollections = new List<Collection>();
+        }
+    }
+
+    private void NavigateToLoginPage()
+    {
+        Navigation.NavigateTo("/login");
+    }
+
+    private void NavigateToRegisterPage()
+    {
+        Navigation.NavigateTo("/register");
+    }
+
+    private void OpenCreateModal()
+    {
+        newCollection = new Collection();
+        isCreateModalOpened = true;
+    }
+
+    private void CloseCreateModal()
+    {
+        isCreateModalOpened = false;
+    }
+
+    private async Task CreateCollection()
+    {
+        if (!userId.HasValue) return;
+
+        newCollection.OwnerId = userId.Value;
+        var createdCollection = await CollectionService.CreateCollectionAsync(newCollection);
+
+        if (createdCollection != null)
+        {
+            await ReloadCollections();
+            isCreateModalOpened = false;
+            StateHasChanged();
+        }
+    }
+
+    private void OpenEditModal(Collection collection)
+    {
+        editedCollection = new Collection
+            {
+                Id = collection.Id,
+                Title = collection.Title,
+                Description = collection.Description,
+                OwnerId = collection.OwnerId,
+                CreatedAt = collection.CreatedAt
+            };
+        isEditModalOpened = true;
+    }
+
+    private void CloseEditModal()
+    {
+        isEditModalOpened = false;
+    }
+
+    private async Task SaveCollectionEdit()
+    {
+        var success = await CollectionService.UpdateCollectionAsync(editedCollection);
+
+        if (success)
+        {
+            await ReloadCollections();
+            isEditModalOpened = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ShowDeleteConfirmation(Collection collection)
+    {
+        collectionToDelete = collection;
+        isDeleteModalOpened = true;
+    }
+
+    private void CloseDeleteModal()
+    {
+        isDeleteModalOpened = false;
+        collectionToDelete = null;
+    }
+
+    private async Task ConfirmDeleteCollection()
+    {
+        if (collectionToDelete != null)
+        {
+            var success = await CollectionService.DeleteCollectionAsync(collectionToDelete.Id);
+
+            if (success)
+            {
+                await ReloadCollections();
+                StateHasChanged();
+                CloseDeleteModal();
+            }
+        }
+    }
+
+    private async Task ReloadCollections()
+    {
+        if (userId.HasValue)
+        {
+            userCollections = await CollectionService.GetCollectionsByUserIdAsync(userId.Value);
+        }
+    }
+}

@@ -1,0 +1,9 @@
+-export do csv
+-indexy pre chemicke vzorce
+-pridanie favourites
+-pagination
+-sortovanie/filtrovanie kolekcii
+-vyhladavanie
+-dark mode
+-zladiť css farby, buttony etc
+-upraviť api routes

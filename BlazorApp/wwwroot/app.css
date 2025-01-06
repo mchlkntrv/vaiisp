@@ -1,0 +1,118 @@
+.hero-container {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-top: -5%;
+    background-image: url('../images/hero_bckg2.jpg');
+    background-size: cover;
+}
+
+.overlay-text {
+    text-align: center;
+    color: white;
+}
+
+.home-cards-container {
+    margin: 1em;
+    margin-top: -2em;
+}
+
+main {
+    min-height: 73vh;
+}
+
+.mineral-info-carousel img {
+    height: 40vh;
+    object-fit: contain;
+    object-position: center;
+}
+
+.mineral-info-carousel .carousel-control-prev-icon,
+.mineral-info-carousel .carousel-control-next-icon {
+    color: #000;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10%;
+}
+
+.carousel-inner {
+    border-radius: 14px;
+}
+
+.carousel {
+    margin-top: 16px;
+}
+
+body {
+    background: linear-gradient(to bottom, #fff, #ddeef5);
+}
+
+.btn-primary {
+    background-color: #052545;
+    border-color: #052545;
+}
+
+    .btn-primary:hover {
+        background-color: #d1ddeb !important;
+        border-color: #d1ddeb;
+        color: #052545;
+    }
+
+    .btn-primary:focus {
+        background-color: #052545;
+        border-color: #052545;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+        .btn-primary:focus:hover {
+            background-color: #d1ddeb !important;
+            border-color: #d1ddeb;
+            outline: none;
+            color: #052545;
+        }
+
+.card-img-top {
+    border-radius: 5px;
+    margin-bottom: 10px;
+    height: 200px;
+    width: 100%;
+    object-fit: contain;
+}
+
+.card {
+    border-radius: 10px;
+    border: none
+}
+
+.mineral-card {
+    transition: transform 0.3s ease;
+}
+
+    .mineral-card:hover {
+        transform: scale(1.015);
+    }
+
+.mineral-card-formula {
+    font-style: italic;
+}
+
+.mineral-card-link {
+    color: black;
+    font-style: italic;
+    text-decoration: none;
+}
+
+    .mineral-card-link:hover {
+        color: black;
+    }
+
+.stretched-link {
+    z-index: 0;
+    margin-top: auto;
+}
+
+    .stretched-link::after {
+        margin-bottom: 5rem;
+    }
