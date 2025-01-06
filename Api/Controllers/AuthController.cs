@@ -54,6 +54,18 @@ namespace Api.Controllers
             return Ok(new { message = "Logout successful" });
         }
 
+        // POST api/auth/register
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegistrationModel registerModel)
+        {
+            var result = await _authService.RegisterUserAsync(registerModel);
+            if (result)
+            {
+                return Ok(new { message = "Registration successful" });
+            }
+            return BadRequest(new { message = "Registration failed" });
+        }
+
         [Authorize]
         [HttpGet("me")]
         public IActionResult GetCurrentUser()

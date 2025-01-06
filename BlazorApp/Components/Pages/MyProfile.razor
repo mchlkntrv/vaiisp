@@ -28,6 +28,7 @@
 
         <div class="mt-4">
             <button class="btn btn-primary" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
+            <button class="btn btn-secondary ml-2" @onclick="NavigateToRegisterPage">Registrovať sa</button>
         </div>
     }
 </main>
@@ -59,5 +60,10 @@
     private void NavigateToLoginPage()
     {
         Navigation.NavigateTo("/login");
+    }
+
+    private void NavigateToRegisterPage()
+    {
+        Navigation.NavigateTo("/register");
     }
 }

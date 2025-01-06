@@ -11,7 +11,8 @@ namespace Models
         public string Username { get; set; }
         public string Email { get; set; }
         [Column("password_hash")]
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
+        public string Salt { get; set; }
         public string Role { get; set; }
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;

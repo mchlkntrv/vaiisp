@@ -14,6 +14,7 @@
         <p>Pre zobrazenie kolekcii sa prihláste.</p>
         <div class="mt-4">
             <button class="btn btn-primary" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
+            <button class="btn btn-secondary ml-2" @onclick="NavigateToRegisterPage">Registrovať sa</button>
         </div>
     }
     else if (userCollections == null || !userCollections.Any())
@@ -69,14 +70,14 @@
                             <div class="form-group mb-3">
                                 <label for="title">Názov kolekcie</label>
                                 <InputText id="title" class="form-control" @bind-Value="newCollection.Title" />
-                                <ValidationMessage For="@(() => editedCollection.Title)" />
+                                <ValidationMessage For="@(() => newCollection.Title)" />
 
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="description">Popis</label>
                                 <InputTextArea id="description" class="form-control" @bind-Value="newCollection.Description" />
-                                <ValidationMessage For="@(() => editedCollection.Description)" />
+                                <ValidationMessage For="@(() => newCollection.Description)" />
 
                             </div>
 
@@ -177,6 +178,11 @@
     private void NavigateToLoginPage()
     {
         Navigation.NavigateTo("/login");
+    }
+
+    private void NavigateToRegisterPage()
+    {
+        Navigation.NavigateTo("/register");
     }
 
     private void OpenCreateModal()

@@ -6,3 +6,4 @@
 -vyhladavanie
 -dark mode
 -zladiť css farby, buttony etc
+-upraviť api routes

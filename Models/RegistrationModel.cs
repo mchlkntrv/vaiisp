@@ -10,15 +10,15 @@ namespace Models
     public class RegistrationModel
     {
         [Required(ErrorMessage = "Meno je povinné.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Meno musí mať medzi 2 a 50 znakmi.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Meno musí mať 2-50 znakov.")]
         public string FirstName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Priezvisko je povinné.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Priezvisko musí mať medzi 2 a 50 znakmi.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Priezvisko musí mať 2-50 znakov.")]
         public string LastName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Používateľské meno je povinné.")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Používateľské meno musí mať medzi 3 a 50 znakmi.")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Používateľské meno musí mať 3-50 znakov.")]
         public string Username { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "E-mail je povinný.")]
@@ -28,6 +28,10 @@ namespace Models
         [Required(ErrorMessage = "Heslo je povinné.")]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Heslo musí mať aspoň 8 znakov.")]
         public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Potvrďte heslo.")]
+        [Compare("Password", ErrorMessage = "Heslá sa nezhodujú.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 
 }

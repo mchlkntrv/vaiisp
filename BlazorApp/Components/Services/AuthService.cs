@@ -46,6 +46,12 @@ namespace BlazorApp.Services
             var userId = await GetUserIdAsync();
             return userId != null;
         }
+        public async Task<bool> RegisterAsync(RegistrationModel registrationModel)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/auth/register", registrationModel);
+
+            return response.IsSuccessStatusCode;
+        }
 
         internal class UserResponse()
         {

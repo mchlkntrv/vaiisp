@@ -19,11 +19,18 @@ namespace BlazorApp.Services
                 return null;
             }
         }
-
-        //TODO: PREROBIT NEFUNGUJE
-        //public async Task<bool> RegisterUserAsync(RegistrationModel registrationModel)
-        //{
-        //}
-
+        public async Task<bool> IsUserAdminAsync()
+        {
+            try
+            {
+                var user = await _httpClient.GetFromJsonAsync<User>("api/auth/me");
+                return user?.Role == "admin";
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

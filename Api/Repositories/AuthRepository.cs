@@ -13,5 +13,10 @@ namespace Api.Repositories
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail);
         }
+        public async Task<bool> AddUserAsync(User user)
+        {
+            _context.Users.Add(user);
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }

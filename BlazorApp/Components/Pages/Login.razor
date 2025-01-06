@@ -39,6 +39,10 @@
                 Nesprávne používateľské meno/email alebo heslo.
             </div>
         }
+
+        <div class="text-center mt-3">
+            <button class="btn btn-secondary btn-block w-100" @onclick="NavigateToRegisterPage">Registrovať sa</button>
+        </div>
     </div>
 </div>
 
@@ -66,5 +70,10 @@
 
         isLoading = false;
         StateHasChanged();
+    }
+
+    private void NavigateToRegisterPage()
+    {
+        Navigation.NavigateTo("/register");
     }
 }
