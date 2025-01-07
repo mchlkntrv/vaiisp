@@ -37,5 +37,26 @@
         {
             return await _collectionRepository.GetCollectionsByUserIdAsync(userId);
         }
+
+        public async Task<List<CollectionItem>> GetItemsInCollectionAsync(int collectionId)
+        {
+            return await _collectionRepository.GetItemsInCollectionAsync(collectionId);
+        }
+        public async Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId)
+        {
+            return await _collectionRepository.GetMineralsInCollectionAsync(collectionId);
+        }
+
+        public async Task<bool> AddItemToCollectionAsync(int collectionId, int mineralId)
+        {
+            //var exists = await _collectionRepository.ItemExistsInCollectionAsync(collectionId, mineralId);
+
+            //if (exists)
+            //    return false;
+            //return await _collectionRepository.AddItemToCollectionAsync(collectionId, mineralId);
+
+            return await _collectionRepository.AddItemToCollectionAsync(collectionId, mineralId);
+
+        }
     }
 }

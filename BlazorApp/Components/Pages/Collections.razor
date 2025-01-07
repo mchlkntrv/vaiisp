@@ -19,6 +19,12 @@
     }
     else if (userCollections == null || !userCollections.Any())
     {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-primary" @onclick="OpenCreateModal">
+                <i class="fas fa-plus" title="Pridať novú kolekciu"></i>
+            </button>
+        </div>
+
         <p>Nemáte žiadne kolekcie.</p>
     }
     else
@@ -43,7 +49,8 @@
                                 <p class="text-muted">Vytvorené: @collection.CreatedAt.ToString("dd.MM.yyyy")</p>
 
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-primary" @onclick="() => OpenEditModal(collection)">Upraviť</button>
+                                    <button class="btn btn-primary" @onclick="() => NavigateToCollectionDetails(collection.Id)">Zobraziť kolekciu</button>
+                                    <button class="btn btn-primary ms-2" @onclick="() => OpenEditModal(collection)">Upraviť</button>
                                     <button class="btn btn-warning ms-2" @onclick="() => ShowDeleteConfirmation(collection)">Vymazať</button>
                                 </div>
                             </div>
@@ -183,6 +190,11 @@
     private void NavigateToRegisterPage()
     {
         Navigation.NavigateTo("/register");
+    }
+
+    private void NavigateToCollectionDetails(int collectionId)
+    {
+        Navigation.NavigateTo($"/collections/{collectionId}");
     }
 
     private void OpenCreateModal()

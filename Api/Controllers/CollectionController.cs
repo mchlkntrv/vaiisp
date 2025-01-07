@@ -4,6 +4,7 @@
     using Models;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Route("api/[controller]")]
@@ -81,6 +82,48 @@
 
             await _collectionService.DeleteCollectionAsync(id);
             return NoContent();
+        }
+
+        // GET: api/collection/{collectionId}/items
+        [HttpGet("{collectionId}/items")]
+        public async Task<ActionResult<List<CollectionItem>>> GetItemsInCollection(int collectionId)
+        {
+            var items = await _collectionService.GetItemsInCollectionAsync(collectionId);
+
+            if (items == null || !items.Any())
+            {
+                return NotFound("Kolekcia neobsahuje ziadne itemy.");
+            }
+
+            return Ok(items);
+        }
+
+        // GET: api/collection/{collectionId}/minerals
+        [HttpGet("{collectionId}/minerals")]
+        public async Task<ActionResult<List<CollectionItem>>> GetMineralsInCollection(int collectionId)
+        {
+            var minerals = await _collectionService.GetMineralsInCollectionAsync(collectionId);
+
+            if (minerals == null || !minerals.Any())
+            {
+                return NotFound("Kolekcia neobsahuje ziadne mineraly.");
+            }
+
+            return Ok(minerals);
+        }
+
+        // POST: api/collection/{collectionId}/items/{mineralId}
+        [HttpPost("{collectionId}/items/{mineralId}")]
+        public async Task<ActionResult> AddItemToCollection(int collectionId, int mineralId)
+        {
+            var success = await _collectionService.AddItemToCollectionAsync(collectionId, mineralId);
+
+            if (!success)
+            {
+                return BadRequest("Nepodarilo sa pridat item do kolekcie.");
+            }
+
+            return Ok("Item bol pridany do kolekcie.");
         }
     }
 }

@@ -20,7 +20,7 @@
             modelBuilder.Entity<CollectionItem>().ToTable("collection_items");
 
             modelBuilder.Entity<CollectionItem>()
-                .HasKey(ci => new { ci.CollectionId, ci.MineralId });
+                .HasKey(ci => ci.Id);
 
             modelBuilder.Entity<CollectionItem>()
                 .HasOne<Collection>()

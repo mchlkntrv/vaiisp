@@ -1,0 +1,75 @@
+﻿@page "/collections/{CollectionId:int}"
+@inject NavigationManager Navigation
+@inject CollectionService CollectionService
+@inject MineralService MineralService
+@rendermode InteractiveServer
+
+<PageTitle>Detaily kolekcie</PageTitle>
+
+<main class="container my-5">
+    <h2 class="text-center mb-4">@collectionName</h2>
+
+    <h4>Minerály v kolekcii</h4>
+    @if (!minerals.Any())
+    {
+        <p>Táto kolekcia neobsahuje zatiaľ žiadne minerály.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var mineral in minerals)
+            {
+                <li>@mineral.Name</li>
+            }
+        </ul>
+    }
+
+    <h4 class="mt-4">Pridať minerál</h4>
+    <div class="form-group">
+        <label for="mineralSelect">Vyberte minerál:</label>
+        <select id="mineralSelect" class="form-control" @bind="selectedMineralId">
+            @foreach (var mineral in availableMinerals)
+            {
+                <option value="@mineral.Id">@mineral.Name</option>
+            }
+        </select>
+    </div>
+    <button class="btn btn-primary mt-2" @onclick="AddMineral">Pridať</button>
+</main>
+
+@code {
+    [Parameter] public int CollectionId { get; set; }
+    private string collectionName = "";
+    private List<Mineral> minerals = new();
+    private List<Mineral> availableMinerals = new();
+    private int? selectedMineralId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var collection = await CollectionService.GetCollectionByIdAsync(CollectionId);
+        if (collection != null)
+        {
+            collectionName = collection.Title;
+            minerals = await CollectionService.GetMineralsInCollectionAsync(CollectionId);
+        }
+
+        availableMinerals = await MineralService.GetMineralsAsync();
+    }
+
+    private async Task AddMineral()
+    {
+        if (selectedMineralId == null) return;
+
+        var success = await CollectionService.AddMineralToCollectionAsync(CollectionId, selectedMineralId.Value);
+
+        if (success)
+        {
+            minerals = await CollectionService.GetMineralsInCollectionAsync(CollectionId);
+            foreach (var mineral in minerals)
+            {
+                Console.WriteLine(mineral.Name);
+            }
+            StateHasChanged();
+        }
+    }
+}

@@ -51,5 +51,37 @@
                 .Where(c => c.OwnerId == userId)
                 .ToListAsync();
         }
+
+        public async Task<List<CollectionItem>> GetItemsInCollectionAsync(int collectionId)
+        {
+            return await _context.CollectionItems
+                .Where(ci => ci.CollectionId == collectionId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId)
+        {
+            return await _context.CollectionItems
+        .Where(ci => ci.CollectionId == collectionId)
+        .Join(_context.Minerals,
+              ci => ci.MineralId,
+              m => m.Id,
+              (ci, m) => m)
+        .ToListAsync();
+        }
+
+        public async Task<bool> AddItemToCollectionAsync(int collectionId, int mineralId)
+        {
+            var newItem = new CollectionItem
+            {
+                CollectionId = collectionId,
+                MineralId = mineralId
+            };
+
+            await _context.CollectionItems.AddAsync(newItem);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
