@@ -29,6 +29,18 @@
             <ValidationMessage For="@(() => mineral.Information)" />
         </div>
 
+        <div class="form-group mb-3">
+            <label for="locations" class="form-label">Lokality</label>
+            <InputText id="locations" class="form-control" @bind-Value="mineral.Locations" />
+            <ValidationMessage For="@(() => mineral.Locations)" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="properties" class="form-label">Vlastnosti</label>
+            <InputTextArea id="properties" class="form-control" @bind-Value="mineral.Properties" />
+            <ValidationMessage For="@(() => mineral.Properties)" />
+        </div>
+
         <button type="submit" class="btn btn-primary">Pridať minerál</button>
     </EditForm>
 

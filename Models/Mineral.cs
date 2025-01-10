@@ -19,5 +19,13 @@ namespace Models
         [Required(ErrorMessage = "Informácie sú povinné.")]
         [StringLength(4000, ErrorMessage = "Informácie môu ma maximálne 4000 znakov.")]
         public string Information { get; set; }
+
+        [Required(ErrorMessage = "Informácie o vıskyte sú povinné.")]
+        [StringLength(4000, ErrorMessage = "Informácie môu ma maximálne 4000 znakov.")]
+        public string Locations { get; set; }
+
+        [Required(ErrorMessage = "Informácie o vlastnostiach minerálu sú povinné.")]
+        [StringLength(4000, ErrorMessage = "Informácie môu ma maximálne 4000 znakov.")]
+        public string Properties { get; set; }
     }
 }

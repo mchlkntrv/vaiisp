@@ -66,6 +66,8 @@ namespace Api.Services
             existingMineral.Name = mineral.Name;
             existingMineral.Information = mineral.Information;
             existingMineral.Formula = mineral.Formula;
+            existingMineral.Properties = mineral.Properties;
+            existingMineral.Locations = mineral.Locations;
 
             await _mineralRepository.UpdateAsync(existingMineral);
             return true;
