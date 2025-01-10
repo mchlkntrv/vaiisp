@@ -2,6 +2,8 @@
 @inject CollectionService CollectionService
 @inject NavigationManager Navigation
 @inject AuthService AuthService
+@inject IJSRuntime JSRuntime
+
 @rendermode InteractiveServer
 
 <PageTitle>Kolekcie</PageTitle>
@@ -33,6 +35,8 @@
             <button class="btn btn-primary" @onclick="OpenCreateModal">
                 <i class="fas fa-plus" title="Pridať novú kolekciu"></i>
             </button>
+            <button class="btn btn-success mb-4" @onclick="ExportToCsv">Exportovať ako CSV</button>
+
         </div>
 
         <div class="row">
@@ -287,4 +291,31 @@
             userCollections = await CollectionService.GetCollectionsByUserIdAsync(userId.Value);
         }
     }
+
+    private async Task ExportToCsv()
+    {
+        if (userCollections == null || !userCollections.Any())
+        {
+            return;
+        }
+
+        var csvContent = GenerateCsv(userCollections);
+
+        await JSRuntime.InvokeVoidAsync("downloadFile", csvContent, "collections.csv");
+    }
+    private string GenerateCsv(List<Collection> collections)
+    {
+        var csv = new StringBuilder();
+
+        csv.AppendLine("Id,Názov kolekcie,Popis,Deň vytvorenia");
+
+        foreach (var collection in collections)
+        {
+            csv.AppendLine($"{collection.Id},{collection.Title},{collection.Description},{collection.CreatedAt.ToString("dd.MM.yyyy")}");
+        }
+
+        return csv.ToString();
+    }
+
+
 }
