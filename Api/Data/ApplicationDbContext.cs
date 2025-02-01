@@ -29,8 +29,8 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CollectionItem>()
-                .HasOne<Mineral>()
-                .WithMany()
+                .HasOne(ci => ci.Mineral)
+                .WithMany(m => m.CollectionItems)
                 .HasForeignKey(ci => ci.MineralId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -39,7 +39,6 @@
               .WithMany(u => u.Collections)
               .HasForeignKey(c => c.OwnerId)
               .OnDelete(DeleteBehavior.Cascade);
-
 
         }
     }

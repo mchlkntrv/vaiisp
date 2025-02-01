@@ -68,11 +68,38 @@ namespace BlazorApp.Services
             }
         }
 
-        public async Task<bool> AddMineralToCollectionAsync(int collectionId, int mineralId)
+        //public async Task<bool> AddMineralToCollectionAsync(int collectionId, int mineralId)
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.PostAsJsonAsync($"api/collection/{collectionId}/items/{mineralId}", new { });
+        //        return response.IsSuccessStatusCode;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.Error.WriteLine($"Error: {ex.Message}");
+        //        return false;
+        //    }
+        //}
+
+        public async Task<List<CollectionItem>> GetCollectionItemsAsync(int collectionId)
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"api/collection/{collectionId}/items/{mineralId}", new { });
+                return await _httpClient.GetFromJsonAsync<List<CollectionItem>>($"api/collection/{collectionId}/items");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+                return new List<CollectionItem>();
+            }
+        }
+
+        public async Task<bool> AddCollectionItemAsync(CollectionItem collectionItem)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/CollectionItem", collectionItem);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -81,5 +108,32 @@ namespace BlazorApp.Services
                 return false;
             }
         }
+
+        public async Task<bool> RemoveCollectionItemAsync(int collectionItemId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/collection/items/{collectionItemId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        //public async Task<List<Mineral>> GetMineralsAsync()
+        //{
+        //    try
+        //    {
+        //        return await _httpClient.GetFromJsonAsync<List<Mineral>>("api/mineral");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.Error.WriteLine($"Error: {ex.Message}");
+        //        return new List<Mineral>();
+        //    }
+        //}
     }
 }

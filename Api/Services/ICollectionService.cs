@@ -16,5 +16,7 @@
         Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId);
 
         Task<bool> AddItemToCollectionAsync(int collectionId, int mineralId);
+        Task<bool> DeleteCollectionItemAsync(int collectionItemId);
+
     }
 }

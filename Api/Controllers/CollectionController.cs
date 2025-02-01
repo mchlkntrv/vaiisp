@@ -112,6 +112,20 @@
             return Ok(minerals);
         }
 
+        //// POST: api/collection/{collectionId}/items/{mineralId}
+        //[HttpPost("{collectionId}/items/{mineralId}")]
+        //public async Task<ActionResult> AddItemToCollection(int collectionId, int mineralId)
+        //{
+        //    var success = await _collectionService.AddItemToCollectionAsync(collectionId, mineralId);
+
+        //    if (!success)
+        //    {
+        //        return BadRequest("Nepodarilo sa pridat item do kolekcie.");
+        //    }
+
+        //    return Ok("Item bol pridany do kolekcie.");
+        //}
+
         // POST: api/collection/{collectionId}/items/{mineralId}
         [HttpPost("{collectionId}/items/{mineralId}")]
         public async Task<ActionResult> AddItemToCollection(int collectionId, int mineralId)
@@ -125,5 +139,20 @@
 
             return Ok("Item bol pridany do kolekcie.");
         }
+
+        // DELETE: api/collection/items/{collectionItemId}
+        [HttpDelete("items/{collectionItemId}")]
+        public async Task<IActionResult> DeleteCollectionItem(int collectionItemId)
+        {
+            var success = await _collectionService.DeleteCollectionItemAsync(collectionItemId);
+
+            if (!success)
+            {
+                return NotFound($"CollectionItem ID {collectionItemId} nebol najdeny.");
+            }
+
+            return NoContent();
+        }
+
     }
 }

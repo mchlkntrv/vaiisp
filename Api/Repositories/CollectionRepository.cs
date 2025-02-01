@@ -54,9 +54,25 @@
 
         public async Task<List<CollectionItem>> GetItemsInCollectionAsync(int collectionId)
         {
-            return await _context.CollectionItems
-                .Where(ci => ci.CollectionId == collectionId)
-                .ToListAsync();
+            var collectionItems = await _context.CollectionItems
+             .Where(ci => ci.CollectionId == collectionId)
+             .ToListAsync();
+
+            var result = new List<CollectionItem>();
+
+            foreach (var item in collectionItems)
+            {
+                item.Mineral = await GetMineralByIdAsync(item.MineralId);
+                result.Add(item);
+            }
+
+            return result;
+        }
+
+        private async Task<Mineral?> GetMineralByIdAsync(int mineralId)
+        {
+            return await _context.Minerals
+                                   .FirstOrDefaultAsync(m => m.Id == mineralId);
         }
 
         public async Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId)
@@ -83,5 +99,22 @@
 
             return true;
         }
+
+        public async Task<bool> DeleteCollectionItemAsync(int collectionItemId)
+        {
+            var collectionItem = await _context.CollectionItems
+                                                 .FirstOrDefaultAsync(ci => ci.Id == collectionItemId);
+
+            if (collectionItem == null)
+            {
+                return false; 
+            }
+
+            _context.CollectionItems.Remove(collectionItem);
+            await _context.SaveChangesAsync();
+
+            return true; 
+        }
+
     }
 }

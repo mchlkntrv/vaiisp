@@ -1,7 +1,7 @@
 ﻿@page "/collections/{CollectionId:int}"
-@inject NavigationManager Navigation
 @inject CollectionService CollectionService
 @inject MineralService MineralService
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <PageTitle>Detaily kolekcie</PageTitle>
@@ -10,39 +10,70 @@
     <h2 class="text-center mb-4">@collectionName</h2>
 
     <h4>Minerály v kolekcii</h4>
-    @if (!minerals.Any())
+    @if (!collectionItems.Any())
     {
         <p>Táto kolekcia neobsahuje zatiaľ žiadne minerály.</p>
     }
     else
     {
-        <ul>
-            @foreach (var mineral in minerals)
-            {
-                <li>@mineral.Name</li>
-            }
-        </ul>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Názov minerálu</th>
+                    <th>Popis</th>
+                    <th>Množstvo</th>
+                    <th>Akcie</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in collectionItems)
+                {
+                    <tr>
+                        <td>@item.MineralId</td>
+                        <td>@item.Mineral.Name</td>
+                        <td>@item.UserDescription</td>
+                        <td>@item.Quantity</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" @onclick="() => RemoveMineral(item.Id)">Odstrániť</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 
     <h4 class="mt-4">Pridať minerál</h4>
     <div class="form-group">
         <label for="mineralSelect">Vyberte minerál:</label>
         <select id="mineralSelect" class="form-control" @bind="selectedMineralId">
+            <option value="">-- Vyberte minerál --</option>
             @foreach (var mineral in availableMinerals)
             {
                 <option value="@mineral.Id">@mineral.Name</option>
             }
         </select>
     </div>
+    <div class="form-group mt-2">
+        <label for="customDescription">Popis</label>
+        <input id="customDescription" class="form-control" @bind="customDescription" placeholder="Pridajte vlastný popis" />
+    </div>
+    <div class="form-group mt-2">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" class="form-control" @bind="quantity" min="1" />
+    </div>
     <button class="btn btn-primary mt-2" @onclick="AddMineral">Pridať</button>
+
 </main>
 
 @code {
     [Parameter] public int CollectionId { get; set; }
     private string collectionName = "";
-    private List<Mineral> minerals = new();
+    private List<CollectionItem> collectionItems = new();
     private List<Mineral> availableMinerals = new();
     private int? selectedMineralId;
+    private string customDescription = "";
+    private int quantity = 1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,7 +81,7 @@
         if (collection != null)
         {
             collectionName = collection.Title;
-            minerals = await CollectionService.GetMineralsInCollectionAsync(CollectionId);
+            collectionItems = await CollectionService.GetCollectionItemsAsync(CollectionId);
         }
 
         availableMinerals = await MineralService.GetMineralsAsync();
@@ -58,17 +89,37 @@
 
     private async Task AddMineral()
     {
-        if (selectedMineralId == null) return;
+        if (selectedMineralId == null)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Prosím, vyberte minerál.");
+            return;
+        }
 
-        var success = await CollectionService.AddMineralToCollectionAsync(CollectionId, selectedMineralId.Value);
+        var newCollectionItem = new CollectionItem
+            {
+                CollectionId = CollectionId,
+                MineralId = selectedMineralId.Value,
+                UserDescription = customDescription,
+                Quantity = quantity,
+                AddedAt = DateTime.Now
+            };
+
+        var success = await CollectionService.AddCollectionItemAsync(newCollectionItem);
 
         if (success)
         {
-            minerals = await CollectionService.GetMineralsInCollectionAsync(CollectionId);
-            foreach (var mineral in minerals)
-            {
-                Console.WriteLine(mineral.Name);
-            }
+            collectionItems = await CollectionService.GetCollectionItemsAsync(CollectionId);
+            StateHasChanged();
+        }
+    }
+
+    private async Task RemoveMineral(int collectionItemId)
+    {
+        var success = await CollectionService.RemoveCollectionItemAsync(collectionItemId);
+
+        if (success)
+        {
+            collectionItems = await CollectionService.GetCollectionItemsAsync(CollectionId);
             StateHasChanged();
         }
     }

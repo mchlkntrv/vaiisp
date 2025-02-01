@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -27,5 +28,8 @@ namespace Models
         [Required(ErrorMessage = "Inform·cie o vlastnostiach miner·lu s˙ povinnÈ.")]
         [StringLength(4000, ErrorMessage = "Inform·cie mÙûu maù maxim·lne 4000 znakov.")]
         public string Properties { get; set; }
+        [JsonIgnore]
+        public List<CollectionItem> CollectionItems { get; set; }
+
     }
 }

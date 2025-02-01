@@ -58,5 +58,10 @@
             return await _collectionRepository.AddItemToCollectionAsync(collectionId, mineralId);
 
         }
+
+        public async Task<bool> DeleteCollectionItemAsync(int collectionItemId)
+        {
+            return await _collectionRepository.DeleteCollectionItemAsync(collectionItemId);
+        }
     }
 }
