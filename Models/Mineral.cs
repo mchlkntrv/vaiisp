@@ -29,7 +29,7 @@ namespace Models
         [StringLength(4000, ErrorMessage = "Inform·cie mÙûu maù maxim·lne 4000 znakov.")]
         public string Properties { get; set; }
         [JsonIgnore]
-        public List<CollectionItem> CollectionItems { get; set; }
+        public List<CollectionItem>? CollectionItems { get; set; }
 
     }
 }

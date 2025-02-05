@@ -1,4 +1,5 @@
 ﻿using Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -32,6 +33,7 @@ namespace Api.Controllers
         }
 
         // POST: api/minerals
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<Mineral>> AddMineral(Mineral mineral)
         {
@@ -50,6 +52,7 @@ namespace Api.Controllers
         }
 
         // PUT: api/minerals/{id}
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMineral(int id, Mineral mineral)
         {
@@ -69,6 +72,7 @@ namespace Api.Controllers
         }
 
         // DELETE: api/minerals/{id}
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMineral(int id)
         {

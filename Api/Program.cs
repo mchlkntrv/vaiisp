@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Models;
+using Microsoft.OpenApi.Models;
 
 namespace Api
 {
@@ -39,7 +40,32 @@ namespace Api
 
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("cookie", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Name = "Cookie",
+                    In = ParameterLocation.Cookie,
+                    Description = "Autentifikácia cez cookies",
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "cookie"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
+
 
             builder.Services.AddCors(options =>
             {

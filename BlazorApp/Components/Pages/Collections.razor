@@ -35,7 +35,7 @@
             <button class="btn btn-primary" @onclick="OpenCreateModal">
                 <i class="fas fa-plus" title="Pridať novú kolekciu"></i>
             </button>
-            <button class="btn btn-success mb-4" @onclick="ExportToCsv">Exportovať ako CSV</button>
+            <button class="btn btn-success" @onclick="ExportToCsv">Exportovať ako CSV</button>
 
         </div>
 
@@ -174,7 +174,6 @@
     protected override async Task OnInitializedAsync()
     {
         userId = await AuthService.GetUserIdAsync();
-
         if (userId.HasValue)
         {
             isLoggedIn = true;
