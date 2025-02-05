@@ -102,6 +102,7 @@ body {
     color: black;
     font-style: italic;
     text-decoration: none;
+    margin-bottom: 5rem;
 }
 
     .mineral-card-link:hover {

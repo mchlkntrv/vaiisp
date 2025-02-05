@@ -1,6 +1,8 @@
 @page "/encyclopedia"
 @inject MineralService MineralService
 @inject UserService UserService
+@inject CollectionService CollectionService
+@inject AuthService AuthService
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
@@ -38,13 +40,13 @@
                             <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center">
                                 @mineral.Name
                                 <span>
-                                    <i class="fa-regular fa-heart" title="Pridať do obľúbených" onclick="toggleHeart(this)"></i>
+                                    <i class="fa-solid fa-plus" title="Pridať do kolekcie" @onclick="() => ShowCollectionModal(mineral.Id)"></i>
                                 </span>
                             </h5>
                             <p style="margin: 0;"> Chemický vzorec: </p>
                             <p class="mineral-card-formula">@mineral.Formula</p>
                             <p class="card-text">@mineral.Information</p>
-                            <a href="@($"/mineral/{mineral.Id}")" class="stretched-link mineral-card-link">Prečítať si viac...</a>
+                            <a href="@($"/mineral/{mineral.Id}")" class="mineral-card-link mt-auto">Prečítať si viac...</a>
                         </div>
                         @if (isAdmin)
                         {
@@ -60,16 +62,62 @@
     }
 </main>
 
+@if (showCollectionModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Pridať do kolekcie</h5>
+                    <button type="button" class="close" @onclick="CloseCollectionModal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Vyberte kolekciu:</p>
+                    <ul class="list-group">
+                        @foreach (var collection in userCollections)
+                        {
+                            <li class="list-group-item list-group-item-action" @onclick="() => SelectCollection(collection.Id)">
+                                @collection.Title
+                            </li>
+                        }
+                    </ul>
+                    <div class="form-group mt-3">
+                        <label for="quantity">Množstvo</label>
+                        <input type="number" class="form-control" id="quantity" @bind="quantity" min="1" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseCollectionModal">Zavrieť</button>
+                    <button type="button" class="btn btn-primary" @onclick="AddToCollection">Pridať</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
 @code {
     private List<Mineral>? minerals;
+    private List<Collection> userCollections = new List<Collection>();
     private bool isAdmin = true;
     private bool isAscending = false;
-    private string sortLabel = "Abecedne (A-Z)"; 
+    private string sortLabel = "Abecedne (A-Z)";
+    private bool showCollectionModal = false;
+    private int selectedMineralId;
+    private int selectedCollectionId;
+    private int quantity = 1;
 
     protected override async Task OnInitializedAsync()
     {
         isAdmin = await UserService.IsUserAdminAsync();
         minerals = await MineralService.GetMineralsAsync();
+        var userId = await AuthService.GetUserIdAsync();
+        if (userId.HasValue)
+        {
+            userCollections = await CollectionService.GetCollectionsByUserIdAsync(userId.Value);
+        }
     }
 
     private async Task DeleteMineral(int id)
@@ -100,5 +148,36 @@
         }
 
         isAscending = !isAscending;
+    }
+
+    private void ShowCollectionModal(int mineralId)
+    {
+        selectedMineralId = mineralId;
+        showCollectionModal = true;
+    }
+
+    private void CloseCollectionModal()
+    {
+        showCollectionModal = false;
+    }
+
+    private void SelectCollection(int collectionId)
+    {
+        selectedCollectionId = collectionId;
+    }
+
+    private async Task AddToCollection()
+    {
+        if (selectedCollectionId > 0 && quantity > 0)
+        {
+            var collectionItem = new CollectionItem
+                {
+                    CollectionId = selectedCollectionId,
+                    MineralId = selectedMineralId,
+                    Quantity = quantity
+                };
+            await CollectionService.AddCollectionItemAsync(collectionItem);
+            CloseCollectionModal();
+        }
     }
 }
