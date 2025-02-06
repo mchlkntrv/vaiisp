@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @inject AuthService AuthService
 @inject IJSRuntime JSRuntime
+@inject IWebHostEnvironment WebHostEnvironment
 
 @rendermode InteractiveServer
 
@@ -45,8 +46,9 @@
                 <div class="col-12 mb-3">
                     <div class="card">
                         <div class="d-flex p-3">
-                            <img src="images/collections/@($"{collection.Id}.jpg")" alt="Náhľad kolekcie" class="img-fluid me-3"
+                            <img src="@GetCollectionImageSrc(collection)" alt="Náhľad kolekcie" class="img-fluid me-3"
                                  style="width: 15vh; object-fit: contain;">
+
                             <div class="flex-grow-1">
                                 <h5 class="card-title">@collection.Title</h5>
                                 <p class="card-text">@collection.Description</p>
@@ -82,17 +84,26 @@
                                 <label for="title">Názov kolekcie</label>
                                 <InputText id="title" class="form-control" @bind-Value="newCollection.Title" />
                                 <ValidationMessage For="@(() => newCollection.Title)" />
-
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="description">Popis</label>
                                 <InputTextArea id="description" class="form-control" @bind-Value="newCollection.Description" />
                                 <ValidationMessage For="@(() => newCollection.Description)" />
-
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Uložiť</button>
+                            <div class="form-group mb-3">
+                                <label for="image">Obrázok kolekcie (max. 500 KB)</label>
+                                <InputFile id="image" OnChange="HandleImageUpload" />
+                                @if (isImageTooLarge)
+                                {
+                                    <div class="alert alert-danger mt-2">
+                                        Obrázok je príliš veľký! Maximálna povolená veľkosť je 500 KB.
+                                    </div>
+                                }
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" disabled="@isImageTooLarge">Uložiť</button>
                         </EditForm>
                     </div>
                 </div>
@@ -117,14 +128,12 @@
                                 <label for="title">Názov kolekcie</label>
                                 <InputText id="title" class="form-control" @bind-Value="editedCollection.Title" />
                                 <ValidationMessage For="@(() => editedCollection.Title)" />
-
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="description">Popis</label>
                                 <InputTextArea id="description" class="form-control" @bind-Value="editedCollection.Description" />
                                 <ValidationMessage For="@(() => editedCollection.Description)" />
-
                             </div>
 
                             <button type="submit" class="btn btn-primary">Uložiť</button>
@@ -170,6 +179,11 @@
 
     private bool isDeleteModalOpened = false;
     private Collection? collectionToDelete;
+
+    private bool isImageTooLarge = false;
+    private const long MaxImageSize = 500 * 1024;
+
+    private IBrowserFile? uploadedImage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -220,9 +234,45 @@
 
         if (createdCollection != null)
         {
+            if (uploadedImage != null)
+            {
+                try
+                {
+                    var uploadPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "collections");
+
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+
+                    var filePath = Path.Combine(uploadPath, $"{createdCollection.Id}.jpg");
+
+                    await using var fileStream = new FileStream(filePath, FileMode.Create);
+                    await uploadedImage.OpenReadStream().CopyToAsync(fileStream);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Chyba pri ukladaní obrázka: {ex.Message}");
+                }
+            } 
+
             await ReloadCollections();
             isCreateModalOpened = false;
             StateHasChanged();
+        }
+    }
+
+    private string GetCollectionImageSrc(Collection collection)
+    {
+        var filePath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "collections", $"{collection.Id}.jpg");
+
+        if (File.Exists(filePath))
+        {
+            return $"/images/collections/{collection.Id}.jpg"; 
+        }
+        else
+        {
+            return "/images/collections/default.jpg"; 
         }
     }
 
@@ -302,6 +352,7 @@
 
         await JSRuntime.InvokeVoidAsync("downloadFile", csvContent, "collections.csv");
     }
+
     private string GenerateCsv(List<Collection> collections)
     {
         var csv = new StringBuilder();
@@ -316,5 +367,19 @@
         return csv.ToString();
     }
 
-
+    private void HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploadedImage = e.File;
+        if (uploadedImage != null)
+        {
+            if (uploadedImage.Size > MaxImageSize)
+            {
+                isImageTooLarge = true; 
+            }
+            else
+            {
+                isImageTooLarge = false;
+            }
+        }
+    }
 }
