@@ -10,5 +10,7 @@ namespace Api.Repositories
         Task AddAsync(Mineral mineral);
         Task UpdateAsync(Mineral mineral);
         Task DeleteAsync(int id);
+        Task<List<Mineral>> SearchMineralsAsync(string query);
+
     }
 }

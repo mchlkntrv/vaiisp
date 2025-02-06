@@ -24,13 +24,20 @@
         }
     </div>
 
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+            <input type="text" class="form-control" id="searchInput" placeholder="Hľadajte minerály" oninput="searchMinerals()" />
+        </div>
+    </div>
+
+
     @if (minerals == null)
     {
         <p>Načítava sa...</p>
     }
     else
     {
-        <div class="row">
+        <div class="row" id="mineralsContainer">
             @foreach (var mineral in minerals)
             {
                 <div class="col-sm-6 col-md-6 col-lg-3 mb-4 d-flex">
@@ -48,17 +55,11 @@
                             <p class="card-text">@mineral.Information</p>
                             <a href="@($"/mineral/{mineral.Id}")" class="mineral-card-link mt-auto">Prečítať si viac...</a>
                         </div>
-                        @if (isAdmin)
-                        {
-                            <div class="card-footer d-flex justify-content-between">
-                                <button class="btn btn-sm btn-warning" @onclick="() => EditMineral(mineral.Id)">Upraviť</button>
-                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteMineral(mineral.Id)">Odstrániť</button>
-                            </div>
-                        }
                     </div>
                 </div>
             }
         </div>
+
     }
 </main>
 
@@ -148,6 +149,7 @@
         }
 
         isAscending = !isAscending;
+        StateHasChanged();
     }
 
     private void ShowCollectionModal(int mineralId)

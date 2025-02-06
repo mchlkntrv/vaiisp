@@ -77,5 +77,11 @@ namespace Api.Services
         {
             await _mineralRepository.DeleteAsync(id);
         }
+
+        public async Task<List<Mineral>> SearchMineralsAsync(string query)
+        {
+            var minerals = await _mineralRepository.SearchMineralsAsync(query);
+            return minerals;
+        }
     }
 }

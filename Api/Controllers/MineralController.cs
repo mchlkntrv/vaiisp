@@ -85,5 +85,23 @@ namespace Api.Controllers
             await _mineralService.DeleteMineralAsync(id);
             return NoContent();
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchMinerals([FromQuery] string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return BadRequest("Vyhľadávací dopyt je prázdny.");
+            }
+
+            var minerals = await _mineralService.SearchMineralsAsync(query);
+
+            if (minerals == null || minerals.Count() == 0)
+            {
+                return NotFound("Žiadne minerály neboli nájdené.");
+            }
+
+            return Ok(minerals);
+        }
     }
 }

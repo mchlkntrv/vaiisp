@@ -9,5 +9,7 @@ namespace Api.Services
         Task<bool> AddMineralAsync(Mineral mineral);
         Task<bool> UpdateMineralAsync(int id, Mineral mineral);
         Task DeleteMineralAsync(int id);
+        Task<List<Mineral>> SearchMineralsAsync(string query);
+
     }
 }

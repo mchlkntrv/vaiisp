@@ -39,5 +39,12 @@ namespace Api.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<Mineral>> SearchMineralsAsync(string query)
+        {
+            return await _context.Minerals
+                .Where(m => m.Name.Contains(query))
+                .ToListAsync();
+        }
     }
 }

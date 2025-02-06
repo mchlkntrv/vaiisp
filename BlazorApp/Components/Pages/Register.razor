@@ -1,6 +1,7 @@
 ﻿@page "/register"
 @inject AuthService AuthService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <PageTitle>Registrácia</PageTitle>
@@ -85,14 +86,21 @@
         submissionSucceeded = false;
         StateHasChanged();
 
-        var result = await AuthService.RegisterAsync(registerModel);
-
-        if (result)
+        try
         {
-            submissionSucceeded = true;
-            Navigation.NavigateTo("/my-profile");
+            var result = await JSRuntime.InvokeAsync<bool>("registerUser", registerModel);
+
+            if (result)
+            {
+                submissionSucceeded = true;
+                Navigation.NavigateTo("/my-profile");
+            }
+            else
+            {
+                submissionFailed = true;
+            }
         }
-        else
+        catch (Exception)
         {
             submissionFailed = true;
         }
