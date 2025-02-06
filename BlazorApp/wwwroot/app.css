@@ -117,3 +117,37 @@ body {
     .stretched-link::after {
         margin-bottom: 5rem;
     }
+
+.collection-card {
+    width: 100%;
+    height: 100%;
+}
+
+.collection-card-img {
+    height: 180px;
+    object-fit: contain;
+}
+
+.modal-visible {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.collection-image {
+    width: 15vh;
+    object-fit: contain;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 400px;
+}

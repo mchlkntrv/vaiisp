@@ -21,8 +21,9 @@
             @foreach (var item in collectionItems)
             {
                 <div class="col mb-4 d-flex justify-content-center">
-                    <div class="card d-flex flex-column" style="width: 100%; height: 100%;">
-                        <img src="@GetMineralImageSrc(item)" class="card-img-top p-4" alt="@item.Mineral.Name" style="height: 180px; object-fit: fit;" />
+                    <div class="card d-flex flex-column collection-card">
+                        <img src="@GetMineralImageSrc(item)" class="card-img-top p-4 collection-card-img" alt="@item.Mineral.Name" />
+
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">@item.Mineral.Name</h5>
                             <p class="card-text flex-grow-1">@item.UserDescription</p>
@@ -39,7 +40,7 @@
 
     @if (isAddMineralModalVisible)
     {
-        <div class="modal fade show" tabindex="-1" style="display:block" aria-labelledby="addMineralModalLabel" aria-hidden="true">
+        <div class="modal fade show modal-visible" tabindex="-1" aria-labelledby="addMineralModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
