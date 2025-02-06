@@ -5,9 +5,28 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class CollectionService(ICollectionRepository collectionRepository) : ICollectionService
+    public interface ICollectionService
     {
-        private readonly ICollectionRepository _collectionRepository = collectionRepository;
+        Task<List<Collection>> GetAllCollectionsAsync();
+        Task<Collection> GetCollectionByIdAsync(int id);
+        Task CreateCollectionAsync(Collection collection);
+        Task UpdateCollectionAsync(Collection collection);
+        Task DeleteCollectionAsync(int id);
+        Task<IEnumerable<Collection>> GetCollectionsByUserIdAsync(int userId);
+        Task<List<CollectionItem>> GetItemsInCollectionAsync(int collectionId);
+        Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId);
+        Task<bool> AddItemToCollectionAsync(int collectionId, int mineralId);
+        Task<bool> DeleteCollectionItemAsync(int collectionItemId);
+    }
+
+    public class CollectionService : ICollectionService
+    {
+        private readonly ICollectionRepository _collectionRepository;
+
+        public CollectionService(ICollectionRepository collectionRepository)
+        {
+            _collectionRepository = collectionRepository;
+        }
 
         public async Task<List<Collection>> GetAllCollectionsAsync()
         {
@@ -33,6 +52,7 @@
         {
             await _collectionRepository.DeleteCollectionAsync(id);
         }
+
         public async Task<IEnumerable<Collection>> GetCollectionsByUserIdAsync(int userId)
         {
             return await _collectionRepository.GetCollectionsByUserIdAsync(userId);
@@ -42,6 +62,7 @@
         {
             return await _collectionRepository.GetItemsInCollectionAsync(collectionId);
         }
+
         public async Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId)
         {
             return await _collectionRepository.GetMineralsInCollectionAsync(collectionId);
@@ -49,14 +70,7 @@
 
         public async Task<bool> AddItemToCollectionAsync(int collectionId, int mineralId)
         {
-            //var exists = await _collectionRepository.ItemExistsInCollectionAsync(collectionId, mineralId);
-
-            //if (exists)
-            //    return false;
-            //return await _collectionRepository.AddItemToCollectionAsync(collectionId, mineralId);
-
             return await _collectionRepository.AddItemToCollectionAsync(collectionId, mineralId);
-
         }
 
         public async Task<bool> DeleteCollectionItemAsync(int collectionItemId)

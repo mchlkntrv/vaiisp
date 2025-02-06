@@ -4,9 +4,24 @@ using Models;
 
 namespace Api.Repositories
 {
-    public class UserRepository(ApplicationDbContext context) : IUserRepository
+    public interface IUserRepository
     {
-        private readonly ApplicationDbContext _context = context;
+        Task<List<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(int id);
+        Task CreateUserAsync(User user);
+        Task UpdateUserAsync(User user);
+        Task DeleteUserAsync(int id);
+        Task<User> GetUserByUsernameOrEmailAsync(string username, string email);
+    }
+
+    public class UserRepository : IUserRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public UserRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task<List<User>> GetAllUsersAsync()
         {

@@ -114,21 +114,6 @@
             return Ok(minerals);
         }
 
-        //// POST: api/collection/{collectionId}/items/{mineralId}
-        //[HttpPost("{collectionId}/items/{mineralId}")]
-        //public async Task<ActionResult> AddItemToCollection(int collectionId, int mineralId)
-        //{
-        //    var success = await _collectionService.AddItemToCollectionAsync(collectionId, mineralId);
-
-        //    if (!success)
-        //    {
-        //        return BadRequest("Nepodarilo sa pridat item do kolekcie.");
-        //    }
-
-        //    return Ok("Item bol pridany do kolekcie.");
-        //}
-
-        // POST: api/collection/{collectionId}/items/{mineralId}
         [HttpPost("{collectionId}/items/{mineralId}")]
         public async Task<ActionResult> AddItemToCollection(int collectionId, int mineralId)
         {

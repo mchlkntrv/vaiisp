@@ -3,8 +3,15 @@ using Models;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace Api.Services
 {
+    public interface IAuthService
+    {
+        Task<User> AuthenticateUserAsync(string usernameOrEmail, string password);
+        Task<bool> RegisterUserAsync(RegistrationModel registerModel);
+    }
+
     public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
@@ -58,7 +65,7 @@ namespace Api.Services
         private string GenerateSalt()
         {
             byte[] saltBytes = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(saltBytes);
             }

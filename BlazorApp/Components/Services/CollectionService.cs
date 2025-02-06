@@ -67,21 +67,6 @@ namespace BlazorApp.Services
                 return new List<Mineral>();
             }
         }
-
-        //public async Task<bool> AddMineralToCollectionAsync(int collectionId, int mineralId)
-        //{
-        //    try
-        //    {
-        //        var response = await _httpClient.PostAsJsonAsync($"api/collection/{collectionId}/items/{mineralId}", new { });
-        //        return response.IsSuccessStatusCode;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.Error.WriteLine($"Error: {ex.Message}");
-        //        return false;
-        //    }
-        //}
-
         public async Task<List<CollectionItem>> GetCollectionItemsAsync(int collectionId)
         {
             try
@@ -117,8 +102,6 @@ namespace BlazorApp.Services
             }
         }
 
-
-
         public async Task<bool> RemoveCollectionItemAsync(int collectionItemId)
         {
             try
@@ -132,18 +115,5 @@ namespace BlazorApp.Services
                 return false;
             }
         }
-
-        //public async Task<List<Mineral>> GetMineralsAsync()
-        //{
-        //    try
-        //    {
-        //        return await _httpClient.GetFromJsonAsync<List<Mineral>>("api/mineral");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.Error.WriteLine($"Error: {ex.Message}");
-        //        return new List<Mineral>();
-        //    }
-        //}
     }
 }

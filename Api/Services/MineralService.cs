@@ -1,8 +1,20 @@
 ﻿using Models;
 using Api.Repositories;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Api.Services
 {
+    public interface IMineralService
+    {
+        Task<List<Mineral>> GetAllMineralsAsync();
+        Task<Mineral?> GetMineralByIdAsync(int id);
+        Task<bool> AddMineralAsync(Mineral mineral);
+        Task<bool> UpdateMineralAsync(int id, Mineral mineral);
+        Task DeleteMineralAsync(int id);
+        Task<List<Mineral>> SearchMineralsAsync(string query);
+    }
+
     public class MineralService : IMineralService
     {
         private readonly IMineralRepository _mineralRepository;
@@ -85,3 +97,4 @@ namespace Api.Services
         }
     }
 }
+

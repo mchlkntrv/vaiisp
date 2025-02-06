@@ -1,6 +1,8 @@
 ﻿@page "/add-mineral"
 @inject MineralService MineralService
 @inject NavigationManager Navigation
+@inject IWebHostEnvironment WebHostEnvironment
+
 @rendermode InteractiveServer
 
 <PageTitle>Pridať Minerál</PageTitle>
@@ -41,6 +43,23 @@
             <ValidationMessage For="@(() => mineral.Properties)" />
         </div>
 
+        <div class="form-group mb-3">
+            <label for="image" class="form-label">Obrázok minerálu</label>
+            <InputFile id="image" class="form-control" OnChange="HandleImageUpload" />
+            @if (isImageTooLarge)
+            {
+                <div class="alert alert-danger mt-2">
+                    Obrázok je príliš veľký! Maximálna povolená veľkosť je 500 KB.
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-2">
+                    @errorMessage
+                </div>
+            }
+        </div>
+
         <button type="submit" class="btn btn-primary">Pridať minerál</button>
     </EditForm>
 
@@ -62,11 +81,57 @@
     private Mineral mineral = new();
     private bool submissionFailed = false;
     private bool submissionSucceeded = false;
+    private bool isImageTooLarge = false;
+    private string? errorMessage;
+    private const long MaxImageSize = 500 * 1024;
+    private IBrowserFile? uploadedImage;
 
     private async Task HandleSubmit()
     {
         submissionFailed = false;
         submissionSucceeded = false;
+        if (uploadedImage != null)
+        {
+            if (uploadedImage.Size > MaxImageSize)
+            {
+                isImageTooLarge = true;
+                return;
+            }
+
+            isImageTooLarge = false;
+
+            var fileNameWithoutNumber = $"{mineral.Name}.jpg"; 
+            var fileNameWithNumber = $"{mineral.Name}1.jpg"; 
+
+            var mineralsPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "minerals");
+            var carouselPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "carousels");
+
+            if (!Directory.Exists(mineralsPath))
+            {
+                Directory.CreateDirectory(mineralsPath);
+            }
+
+            if (!Directory.Exists(carouselPath))
+            {
+                Directory.CreateDirectory(carouselPath);
+            }
+
+            try
+            {
+                var mineralsFilePath = Path.Combine(mineralsPath, fileNameWithoutNumber);
+                await using var mineralsFileStream = new FileStream(mineralsFilePath, FileMode.Create);
+                await uploadedImage.OpenReadStream().CopyToAsync(mineralsFileStream);
+
+                var carouselFilePath = Path.Combine(carouselPath, fileNameWithNumber);
+                await using var carouselFileStream = new FileStream(carouselFilePath, FileMode.Create);
+                await uploadedImage.OpenReadStream().CopyToAsync(carouselFileStream);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Chyba pri ukladaní obrázka: {ex.Message}";
+                return;
+            }
+        }
 
         var wasAdded = await MineralService.AddMineralAsync(mineral);
 
@@ -77,6 +142,19 @@
         else
         {
             submissionFailed = true;
+        }
+    }
+    private void HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploadedImage = e.File;
+
+        if (uploadedImage != null && uploadedImage.Size > MaxImageSize)
+        {
+            isImageTooLarge = true;
+        }
+        else
+        {
+            isImageTooLarge = false;
         }
     }
 }

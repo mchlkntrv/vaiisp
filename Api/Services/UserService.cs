@@ -1,14 +1,27 @@
 ﻿using Api.Repositories;
-using Microsoft.AspNetCore.Identity;
 using Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Services
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public interface IUserService
     {
-        private readonly IUserRepository _userRepository = userRepository;
+        Task<List<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(int id);
+        Task CreateUserAsync(User user);
+        Task UpdateUserAsync(User user);
+        Task DeleteUserAsync(int id);
+    }
+
+    public class UserService : IUserService
+    {
+        private readonly IUserRepository _userRepository;
+
+        public UserService(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
 
         public async Task<List<User>> GetAllUsersAsync()
         {
@@ -34,14 +47,6 @@ namespace Api.Services
         {
             await _userRepository.DeleteUserAsync(id);
         }
-
-        //public async Task<bool> RegisterUserAsync(RegistrationModel registrationModel)
-        //{
-        //}
-
-
-        //private bool IsValidPassword(string password)
-        //{
-        //}
     }
 }
+

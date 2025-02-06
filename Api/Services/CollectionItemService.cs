@@ -5,19 +5,27 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class CollectionItemService(ICollectionItemRepository collectionItemRepository) : ICollectionItemService
+    public interface ICollectionItemService
     {
-        private readonly ICollectionItemRepository _collectionItemRepository = collectionItemRepository;
+        Task<List<CollectionItem>> GetAllCollectionItemsAsync();
+        Task<CollectionItem> GetCollectionItemAsync(int collectionItemId);
+        Task CreateCollectionItemAsync(CollectionItem collectionItem);
+        Task DeleteCollectionItemAsync(int collectionId, int mineralId);
+    }
+
+    public class CollectionItemService : ICollectionItemService
+    {
+        private readonly ICollectionItemRepository _collectionItemRepository;
+
+        public CollectionItemService(ICollectionItemRepository collectionItemRepository)
+        {
+            _collectionItemRepository = collectionItemRepository;
+        }
 
         public async Task<List<CollectionItem>> GetAllCollectionItemsAsync()
         {
             return await _collectionItemRepository.GetAllCollectionItemsAsync();
         }
-
-        //public async Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId)
-        //{
-        //    return await _collectionItemRepository.GetCollectionItemAsync(collectionId, mineralId);
-        //}
 
         public async Task<CollectionItem> GetCollectionItemAsync(int collectionItemId)
         {

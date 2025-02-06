@@ -33,5 +33,4 @@ namespace Models
         [Compare("Password", ErrorMessage = "Heslá sa nezhodujú.")]
         public string ConfirmPassword { get; set; } = string.Empty;
     }
-
 }

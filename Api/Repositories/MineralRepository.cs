@@ -4,9 +4,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories
 {
-    public class MineralRepository(ApplicationDbContext context) : IMineralRepository
+    public interface IMineralRepository
     {
-        private readonly ApplicationDbContext _context = context;
+        Task<List<Mineral>> GetAllAsync();
+        Task<Mineral> GetByIdAsync(int id);
+        Task<Mineral?> GetByNameAsync(string name);
+        Task AddAsync(Mineral mineral);
+        Task UpdateAsync(Mineral mineral);
+        Task DeleteAsync(int id);
+        Task<List<Mineral>> SearchMineralsAsync(string query);
+    }
+
+    public class MineralRepository : IMineralRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public MineralRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task<List<Mineral>> GetAllAsync() => await _context.Minerals.ToListAsync();
 

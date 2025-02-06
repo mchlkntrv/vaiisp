@@ -1,25 +1,32 @@
-﻿namespace Api.Repositories
-{
-    using Models;
-    using Api.Data;
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿using Models;
+using Api.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-    public class CollectionItemRepository(ApplicationDbContext context) : ICollectionItemRepository
+namespace Api.Repositories
+{
+    public interface ICollectionItemRepository
     {
-        private readonly ApplicationDbContext _context = context;
+        Task<List<CollectionItem>> GetAllCollectionItemsAsync();
+        Task<CollectionItem> GetCollectionItemAsync(int collectionItemId);
+        Task CreateCollectionItemAsync(CollectionItem collectionItem);
+        Task DeleteCollectionItemAsync(int collectionId, int mineralId);
+    }
+
+    public class CollectionItemRepository : ICollectionItemRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public CollectionItemRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task<List<CollectionItem>> GetAllCollectionItemsAsync()
         {
             return await _context.CollectionItems.ToListAsync();
         }
-
-        //public async Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId)
-        //{
-        //    return await _context.CollectionItems
-        //        .FirstOrDefaultAsync(ci => ci.CollectionId == collectionId && ci.MineralId == mineralId);
-        //}
 
         public async Task<CollectionItem> GetCollectionItemAsync(int collectionItemId)
         {

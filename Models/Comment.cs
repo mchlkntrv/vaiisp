@@ -15,7 +15,6 @@ namespace Models
 
         [Required]
         [Column("mineral_id")]
-
         public int MineralId { get; set; }  
 
         [Required]
@@ -24,20 +23,18 @@ namespace Models
 
         [Required]
         [Column("created_at")]
-
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [Required]
         [Column("user_id")]
-
         public int UserId { get; set; }
 
         public string Username { get; set; } = string.Empty;
 
         [JsonIgnore]
         public User? User { get; set; }
-        [JsonIgnore]
 
+        [JsonIgnore]
         public Mineral? Mineral { get; set; }
     }
 }

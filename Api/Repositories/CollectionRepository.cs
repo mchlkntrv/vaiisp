@@ -1,14 +1,34 @@
-﻿namespace Api.Repositories
-{
-    using Models;
-    using Api.Data;
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿using Models;
+using Api.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-    public class CollectionRepository(ApplicationDbContext context) : ICollectionRepository
+namespace Api.Repositories
+{
+    public interface ICollectionRepository
     {
-        private readonly ApplicationDbContext _context = context;
+        Task<List<Collection>> GetAllCollectionsAsync();
+        Task<Collection> GetCollectionByIdAsync(int id);
+        Task CreateCollectionAsync(Collection collection);
+        Task UpdateCollectionAsync(Collection collection);
+        Task DeleteCollectionAsync(int id);
+        Task<IEnumerable<Collection>> GetCollectionsByUserIdAsync(int userId);
+        Task<List<CollectionItem>> GetItemsInCollectionAsync(int collectionId);
+        Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId);
+        Task<bool> AddItemToCollectionAsync(int collectionId, int mineralId);
+        Task<bool> DeleteCollectionItemAsync(int collectionItemId);
+    }
+
+    public class CollectionRepository : ICollectionRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public CollectionRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task<List<Collection>> GetAllCollectionsAsync()
         {
@@ -36,7 +56,7 @@
         public async Task DeleteCollectionAsync(int id)
         {
             var collection = await _context.Collections
-                .Include(c => c.CollectionItems)  
+                .Include(c => c.CollectionItems)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (collection == null)
@@ -45,14 +65,11 @@
             }
 
             _context.CollectionItems.RemoveRange(collection.CollectionItems);
-
             await _context.SaveChangesAsync();
 
             _context.Collections.Remove(collection);
-
             await _context.SaveChangesAsync();
         }
-
 
         public async Task<IEnumerable<Collection>> GetCollectionsByUserIdAsync(int userId)
         {
@@ -64,8 +81,8 @@
         public async Task<List<CollectionItem>> GetItemsInCollectionAsync(int collectionId)
         {
             var collectionItems = await _context.CollectionItems
-             .Where(ci => ci.CollectionId == collectionId)
-             .ToListAsync();
+                .Where(ci => ci.CollectionId == collectionId)
+                .ToListAsync();
 
             var result = new List<CollectionItem>();
 
@@ -81,18 +98,18 @@
         private async Task<Mineral?> GetMineralByIdAsync(int mineralId)
         {
             return await _context.Minerals
-                                   .FirstOrDefaultAsync(m => m.Id == mineralId);
+                .FirstOrDefaultAsync(m => m.Id == mineralId);
         }
 
         public async Task<List<Mineral>> GetMineralsInCollectionAsync(int collectionId)
         {
             return await _context.CollectionItems
-        .Where(ci => ci.CollectionId == collectionId)
-        .Join(_context.Minerals,
-              ci => ci.MineralId,
-              m => m.Id,
-              (ci, m) => m)
-        .ToListAsync();
+                .Where(ci => ci.CollectionId == collectionId)
+                .Join(_context.Minerals,
+                      ci => ci.MineralId,
+                      m => m.Id,
+                      (ci, m) => m)
+                .ToListAsync();
         }
 
         public async Task<bool> AddItemToCollectionAsync(int collectionId, int mineralId)
@@ -112,18 +129,17 @@
         public async Task<bool> DeleteCollectionItemAsync(int collectionItemId)
         {
             var collectionItem = await _context.CollectionItems
-                                                 .FirstOrDefaultAsync(ci => ci.Id == collectionItemId);
+                .FirstOrDefaultAsync(ci => ci.Id == collectionItemId);
 
             if (collectionItem == null)
             {
-                return false; 
+                return false;
             }
 
             _context.CollectionItems.Remove(collectionItem);
             await _context.SaveChangesAsync();
 
-            return true; 
+            return true;
         }
-
     }
 }
