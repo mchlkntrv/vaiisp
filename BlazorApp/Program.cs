@@ -27,11 +27,14 @@ builder.Services.AddHttpClient<MineralService>();
 builder.Services.AddHttpClient<CollectionService>();
 builder.Services.AddHttpClient<AuthService>();
 builder.Services.AddHttpClient<UserService>();
+builder.Services.AddHttpClient<CommentService>();
 
 builder.Services.AddScoped<MineralService>();
 builder.Services.AddScoped<CollectionService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CommentService>();
+
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

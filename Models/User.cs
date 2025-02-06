@@ -17,5 +17,6 @@ namespace Models
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public List<Collection> Collections { get; set; }
+
     }
 }
