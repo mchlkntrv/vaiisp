@@ -18,12 +18,17 @@
             <div class="col-12 mb-4 d-flex">
                 <div class="card flex-fill">
                     <div class="card-body d-flex flex-column">
-                        <div id="mineralCarousel" class="carousel carousel-fade mineral-info-carousel"
+                        <div id="mineralCarousel" class="carousel slide carousel-fade mineral-info-carousel"
                              data-bs-ride="carousel">
                             <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="@($"images/{mineral.Name}.jpg")" class="d-block w-100" alt="@mineral.Name">
-                                </div>
+                                @for (int i = 1; i <= MaxImageCount; i++)
+                                {
+                                    string imagePath = $"images/carousels/{mineral.Name}{i}.jpg";
+
+                                    <div class="carousel-item @(i == 1 ? "active" : "")">
+                                        <img src="@imagePath" class="d-block w-100" alt="@mineral.Name">
+                                    </div>
+                                }
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#mineralCarousel"
                                     data-bs-slide="prev">
@@ -37,11 +42,9 @@
                             </button>
                         </div>
 
+
                         <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center mt-3">
                             @mineral.Name
-                            <span>
-                                <i class="fa-regular fa-heart" title="Pridať do obľúbených"></i>
-                            </span>
                         </h5>
                         <p style="margin: 0;"> Chemický vzorec: </p>
                         <p class="mineral-card-formula">@mineral.Formula</p>
@@ -121,10 +124,15 @@
     private string newCommentText = "";
     private bool isUserAuthenticated = false;
     private int? loggedInUserId;
+    private int MaxImageCount = 0;
 
     protected override async Task OnInitializedAsync()
     {
+        
         mineral = await MineralService.GetMineralByIdAsync(MineralId);
+
+        var files = Directory.GetFiles(Path.Combine("wwwroot/images/carousels"), $"{mineral.Name}*.jpg");
+        MaxImageCount = files.Length;
         await LoadComments();
         await CheckUserAuthentication();
     }
