@@ -2,6 +2,7 @@
 @inject MineralService MineralService
 @inject CommentService CommentService
 @inject AuthService AuthService
+@inject UserService UserService
 @rendermode InteractiveServer
 
 <PageTitle>Minerál - @mineral?.Name</PageTitle>
@@ -96,8 +97,14 @@
                         <li class="list-group-item">
                             <p><strong>@comment.Username:</strong> @comment.Text</p>
                             <small class="text-muted">@comment.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
+
+                            @if (isUserAuthenticated && (comment.UserId == loggedInUserId || isUserAdmin))
+                            {
+                                <i class="fa fa-trash text-danger cursor-pointer m-1" @onclick="() => DeleteComment(comment.Id, comment.UserId)" title="Zmazať komentár"></i>
+                            }
                         </li>
                     }
+
                 </ul>
             }
 
@@ -114,6 +121,7 @@
                 <p class="text-muted mt-3">Na pridanie komentára sa musíte prihlásiť.</p>
             }
         </section>
+
     }
 </main>
 
@@ -125,16 +133,18 @@
     private bool isUserAuthenticated = false;
     private int? loggedInUserId;
     private int MaxImageCount = 0;
+    private bool isUserAdmin = false;
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         mineral = await MineralService.GetMineralByIdAsync(MineralId);
 
         var files = Directory.GetFiles(Path.Combine("wwwroot/images/carousels"), $"{mineral.Name}*.jpg");
         MaxImageCount = files.Length;
         await LoadComments();
         await CheckUserAuthentication();
+        isUserAdmin = await UserService.IsUserAdminAsync();
     }
 
     private async Task LoadComments()
@@ -165,4 +175,14 @@
         newCommentText = "";
         await LoadComments();
     }
+
+    private async Task DeleteComment(int commentId, int userId)
+    {
+        if (loggedInUserId == userId || isUserAdmin)
+        {
+            await CommentService.DeleteCommentAsync(commentId);
+            await LoadComments();  
+        }
+    }
+
 }

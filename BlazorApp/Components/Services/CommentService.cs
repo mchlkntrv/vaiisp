@@ -24,5 +24,15 @@ namespace BlazorApp.Services
         {
             await _httpClient.PostAsJsonAsync("api/comments", comment);
         }
+
+        public async Task DeleteCommentAsync(int commentId)
+        {
+            var response = await _httpClient.DeleteAsync($"api/comments/{commentId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Komentar nevymazany");
+            }
+        }
     }
 }
