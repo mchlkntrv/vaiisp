@@ -23,10 +23,10 @@
                 .HasKey(ci => ci.Id);
 
             modelBuilder.Entity<CollectionItem>()
-                .HasOne<Collection>()
-                .WithMany()
+                .HasOne(ci => ci.Collection)
+                .WithMany(c => c.CollectionItems)
                 .HasForeignKey(ci => ci.CollectionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CollectionItem>()
                 .HasOne(ci => ci.Mineral)

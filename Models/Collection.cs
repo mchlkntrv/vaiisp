@@ -21,5 +21,7 @@ namespace Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         [JsonIgnore]
         public User? Owner { get; set; }
+        [JsonIgnore]
+        public List<CollectionItem>? CollectionItems { get; set; }
     }
 }

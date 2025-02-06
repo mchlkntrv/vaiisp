@@ -18,7 +18,8 @@ namespace Models
         [Column("user_description")]
         public String? UserDescription { get; set; }
 
-        public Mineral? Mineral { get; set; }  
+        public Mineral? Mineral { get; set; }
+        public Collection? Collection { get; set; }
 
     }
 }

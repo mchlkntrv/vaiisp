@@ -36,14 +36,23 @@
         public async Task DeleteCollectionAsync(int id)
         {
             var collection = await _context.Collections
+                .Include(c => c.CollectionItems)  
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            if (collection != null)
+            if (collection == null)
             {
-                _context.Collections.Remove(collection);
-                await _context.SaveChangesAsync();
+                return;
             }
+
+            _context.CollectionItems.RemoveRange(collection.CollectionItems);
+
+            await _context.SaveChangesAsync();
+
+            _context.Collections.Remove(collection);
+
+            await _context.SaveChangesAsync();
         }
+
 
         public async Task<IEnumerable<Collection>> GetCollectionsByUserIdAsync(int userId)
         {
