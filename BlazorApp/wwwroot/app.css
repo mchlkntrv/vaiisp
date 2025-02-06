@@ -48,7 +48,7 @@ body {
     background: linear-gradient(to bottom, #fff, #ddeef5);
 }
 
-.btn-primary {
+.btn-primary, .btn-warning {
     background-color: #052545;
     border-color: #052545;
 }
@@ -151,3 +151,71 @@ body {
     width: 100%;
     max-width: 400px;
 }
+
+.btn-danger {
+    background-color: #842029;
+    border-color: #842029;
+    color: white;
+}
+
+    .btn-danger:hover {
+        background-color: #a92c37 !important;
+        border-color: #a92c37;
+        color: white;
+    }
+
+    .btn-danger:focus {
+        background-color: #842029;
+        border-color: #842029;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+        .btn-danger:focus:hover {
+            background-color: #a92c37 !important;
+            border-color: #a92c37;
+            outline: none;
+            color: white;
+        }
+
+.btn-warning {
+    background-color: #052545;
+    border-color: #052545;
+    color: white
+}
+
+    .btn-warning:hover {
+        background-color: #d1ddeb !important;
+        border-color: #d1ddeb;
+        color: #052545;
+    }
+
+    .btn-warning:focus {
+        background-color: #052545;
+        border-color: #052545;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+        .btn-warning:focus:hover {
+            background-color: #d1ddeb !important;
+            border-color: #d1ddeb;
+            outline: none;
+            color: #052545;
+        }
+
+.validation-message{
+    color:red;
+}
+
+.card-footer {
+    background-color: transparent !important; 
+    border-top: 0 !important; 
+}
+
+.nav-link {
+    color: #9ba3aa !important;
+}
+    nav-link:focus, .nav-link:hover {
+        color: #6c757d;
+    }

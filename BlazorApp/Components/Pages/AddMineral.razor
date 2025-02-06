@@ -90,47 +90,51 @@
     {
         submissionFailed = false;
         submissionSucceeded = false;
-        if (uploadedImage != null)
+
+        if (uploadedImage == null)
         {
-            if (uploadedImage.Size > MaxImageSize)
-            {
-                isImageTooLarge = true;
-                return;
-            }
+            errorMessage = "Obrázok je povinný.";
+            return;
+        }
 
-            isImageTooLarge = false;
+        if (uploadedImage.Size > MaxImageSize)
+        {
+            isImageTooLarge = true;
+            return;
+        }
 
-            var fileNameWithoutNumber = $"{mineral.Name}.jpg"; 
-            var fileNameWithNumber = $"{mineral.Name}1.jpg"; 
+        isImageTooLarge = false;
 
-            var mineralsPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "minerals");
-            var carouselPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "carousels");
+        var fileNameWithoutNumber = $"{mineral.Name}.jpg";
+        var fileNameWithNumber = $"{mineral.Name}1.jpg";
 
-            if (!Directory.Exists(mineralsPath))
-            {
-                Directory.CreateDirectory(mineralsPath);
-            }
+        var mineralsPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "minerals");
+        var carouselPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "carousels");
 
-            if (!Directory.Exists(carouselPath))
-            {
-                Directory.CreateDirectory(carouselPath);
-            }
+        if (!Directory.Exists(mineralsPath))
+        {
+            Directory.CreateDirectory(mineralsPath);
+        }
 
-            try
-            {
-                var mineralsFilePath = Path.Combine(mineralsPath, fileNameWithoutNumber);
-                await using var mineralsFileStream = new FileStream(mineralsFilePath, FileMode.Create);
-                await uploadedImage.OpenReadStream().CopyToAsync(mineralsFileStream);
+        if (!Directory.Exists(carouselPath))
+        {
+            Directory.CreateDirectory(carouselPath);
+        }
 
-                var carouselFilePath = Path.Combine(carouselPath, fileNameWithNumber);
-                await using var carouselFileStream = new FileStream(carouselFilePath, FileMode.Create);
-                await uploadedImage.OpenReadStream().CopyToAsync(carouselFileStream);
-            }
-            catch (Exception ex)
-            {
-                errorMessage = $"Chyba pri ukladaní obrázka: {ex.Message}";
-                return;
-            }
+        try
+        {
+            var mineralsFilePath = Path.Combine(mineralsPath, fileNameWithoutNumber);
+            await using var mineralsFileStream = new FileStream(mineralsFilePath, FileMode.Create);
+            await uploadedImage.OpenReadStream().CopyToAsync(mineralsFileStream);
+
+            var carouselFilePath = Path.Combine(carouselPath, fileNameWithNumber);
+            await using var carouselFileStream = new FileStream(carouselFilePath, FileMode.Create);
+            await uploadedImage.OpenReadStream().CopyToAsync(carouselFileStream);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Chyba pri ukladaní obrázka: {ex.Message}";
+            return;
         }
 
         var wasAdded = await MineralService.AddMineralAsync(mineral);
@@ -138,12 +142,15 @@
         if (wasAdded)
         {
             submissionSucceeded = true;
+            Navigation.NavigateTo($"/encyclopedia");
+
         }
         else
         {
             submissionFailed = true;
         }
     }
+
     private void HandleImageUpload(InputFileChangeEventArgs e)
     {
         uploadedImage = e.File;

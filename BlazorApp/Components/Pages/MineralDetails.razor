@@ -107,7 +107,7 @@
         </div>
 
         <section class="comments-section mt-4">
-            <h3>Komentáre</h3>
+            <h5>Komentáre</h5>
 
             @if (comments == null)
             {
@@ -133,6 +133,18 @@
                         </li>
                     }
                 </ul>
+            }
+            @if (isUserAuthenticated)
+            {
+                <div class="mt-3">
+                    <h5>Pridať komentár:</h5>
+                    <textarea class="form-control" @bind="newCommentText" rows="3"></textarea>
+                    <button class="btn btn-primary mt-2" @onclick="SubmitComment">Odoslať</button>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted mt-3">Na pridanie komentára sa musíte prihlásiť.</p>
             }
         </section>
     }
