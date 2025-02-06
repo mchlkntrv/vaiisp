@@ -213,9 +213,9 @@ body {
     border-top: 0 !important; 
 }
 
-.nav-link {
-    color: #9ba3aa !important;
+.nav-link-tab {
+    color: #052545 !important;
 }
-    nav-link:focus, .nav-link:hover {
+    nav-link-tab:focus, .nav-link:hover {
         color: #6c757d;
     }
