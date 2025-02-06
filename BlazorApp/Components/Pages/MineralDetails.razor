@@ -3,6 +3,7 @@
 @inject CommentService CommentService
 @inject AuthService AuthService
 @inject UserService UserService
+@inject IWebHostEnvironment WebHostEnvironment
 @rendermode InteractiveServer
 
 <PageTitle>Minerál - @mineral?.Name</PageTitle>
@@ -43,7 +44,6 @@
                             </button>
                         </div>
 
-
                         <h5 class="card-title font-weight-bold d-flex justify-content-between align-items-center mt-3">
                             @mineral.Name
                         </h5>
@@ -73,6 +73,34 @@
                                 <p>@mineral.Properties</p>
                             </div>
                         </div>
+                        @if (isUserAdmin)
+                        {
+                            <div class="mt-3">
+                                <h5>Pridať obrázok:</h5>
+                                <InputFile OnChange="HandleImageUpload" />
+
+                                @if (uploadedImage != null && !isImageConfirmed)
+                                {
+                                    <button class="btn btn-success mt-2" @onclick="ConfirmImageUpload">Potvrdiť</button>
+                                }
+
+                                @if (isImageTooLarge)
+                                {
+                                    <div class="alert alert-danger mt-2">
+                                        Obrázok je príliš veľký! Maximálna veľkosť je 500 KB.
+                                    </div>
+                                }
+
+                                @if (isImageConfirmed)
+                                {
+                                    <div class="alert alert-success mt-2">
+                                        Obrázok bol úspešne pridaný!
+                                    </div>
+                                    <button class="btn btn-secondary mt-2" @onclick="ResetImageSelection">Vybrať ďalší obrázok</button>
+                                }
+                            </div>
+                        }
+
                     </div>
                 </div>
             </div>
@@ -104,24 +132,9 @@
                             }
                         </li>
                     }
-
                 </ul>
             }
-
-            @if (isUserAuthenticated)
-            {
-                <div class="mt-3">
-                    <h5>Pridať komentár:</h5>
-                    <textarea class="form-control" @bind="newCommentText" rows="3"></textarea>
-                    <button class="btn btn-primary mt-2" @onclick="SubmitComment">Odoslať</button>
-                </div>
-            }
-            else
-            {
-                <p class="text-muted mt-3">Na pridanie komentára sa musíte prihlásiť.</p>
-            }
         </section>
-
     }
 </main>
 
@@ -135,9 +148,68 @@
     private int MaxImageCount = 0;
     private bool isUserAdmin = false;
 
+    private bool isImageTooLarge = false;
+    private string? errorMessage;
+    private const long MaxImageSize = 500 * 1024;
+    private IBrowserFile? uploadedImage;
+    private bool isImageConfirmed = false;
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploadedImage = e.File;
+
+        if (uploadedImage != null)
+        {
+            if (uploadedImage.Size > MaxImageSize)
+            {
+                isImageTooLarge = true;
+                return;
+            }
+
+            isImageTooLarge = false;
+            isImageConfirmed = false;
+        }
+    }
+
+    private async Task ConfirmImageUpload()
+    {
+        if (uploadedImage == null) return;
+        var fileNameWithoutNumber = $"{mineral.Name}.jpg";
+
+        var carouselPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "carousels");
+
+        if (!Directory.Exists(carouselPath))
+        {
+            Directory.CreateDirectory(carouselPath);
+        }
+
+        var existingImages = Directory.GetFiles(carouselPath, $"{mineral.Name}*.jpg");
+        var newImageIndex = existingImages.Length + 1;
+
+        var newFileName = $"{mineral.Name}{newImageIndex}.jpg";
+        var filePath = Path.Combine(carouselPath, newFileName);
+
+        try
+        {
+            await using var fileStream = new FileStream(filePath, FileMode.Create);
+            await uploadedImage.OpenReadStream().CopyToAsync(fileStream);
+            MaxImageCount = existingImages.Length + 1;
+            isImageConfirmed = true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Chyba pri ukladaní obrázka: {ex.Message}";
+        }
+    }
+
+    private void ResetImageSelection()
+    {
+        uploadedImage = null;
+        isImageConfirmed = false;
+    }
+
     protected override async Task OnInitializedAsync()
     {
-
         mineral = await MineralService.GetMineralByIdAsync(MineralId);
 
         var files = Directory.GetFiles(Path.Combine("wwwroot/images/carousels"), $"{mineral.Name}*.jpg");
@@ -181,8 +253,7 @@
         if (loggedInUserId == userId || isUserAdmin)
         {
             await CommentService.DeleteCommentAsync(commentId);
-            await LoadComments();  
+            await LoadComments();
         }
     }
-
 }

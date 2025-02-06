@@ -1,6 +1,8 @@
 ﻿@page "/edit-mineral/{id:int}"
 @inject MineralService MineralService
 @inject NavigationManager Navigation
+@inject AuthService AuthService
+@inject UserService UserService
 @rendermode InteractiveServer
 
 <PageTitle>Upraviť minerál</PageTitle>
@@ -8,53 +10,60 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Upraviť Minerál</h2>
 
-    <EditForm Model="@mineral" OnValidSubmit="HandleSubmit" FormName="EditMineralForm">
-        <DataAnnotationsValidator />
-
-        <div class="form-group mb-3">
-            <label for="name" class="form-label">Názov minerálu</label>
-            <InputText id="name" class="form-control" @bind-Value="mineral.Name" />
-            <ValidationMessage For="@(() => mineral.Name)" />
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="formula" class="form-label">Chemický vzorec</label>
-            <InputText id="formula" class="form-control" @bind-Value="mineral.Formula" />
-            <ValidationMessage For="@(() => mineral.Formula)" />
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="information" class="form-label">Informácie</label>
-            <InputTextArea id="information" class="form-control" @bind-Value="mineral.Information" />
-            <ValidationMessage For="@(() => mineral.Information)" />
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="locations" class="form-label">Lokality</label>
-            <InputText id="locations" class="form-control" @bind-Value="mineral.Locations" />
-            <ValidationMessage For="@(() => mineral.Locations)" />
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="properties" class="form-label">Vlastnosti</label>
-            <InputTextArea id="properties" class="form-control" @bind-Value="mineral.Properties" />
-            <ValidationMessage For="@(() => mineral.Properties)" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Upraviť minerál</button>
-    </EditForm>
-
-    @if (submissionFailed)
+    @if (isUserAuthenticated && isUserAdmin)
     {
-        <div class="alert alert-danger mt-3">
-            Nepodarilo sa upraviť minerál. Skúste to znova.
-        </div>
+        <EditForm Model="@mineral" OnValidSubmit="HandleSubmit" FormName="EditMineralForm">
+            <DataAnnotationsValidator />
+
+            <div class="form-group mb-3">
+                <label for="name" class="form-label">Názov minerálu</label>
+                <InputText id="name" class="form-control" @bind-Value="mineral.Name" />
+                <ValidationMessage For="@(() => mineral.Name)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="formula" class="form-label">Chemický vzorec</label>
+                <InputText id="formula" class="form-control" @bind-Value="mineral.Formula" />
+                <ValidationMessage For="@(() => mineral.Formula)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="information" class="form-label">Informácie</label>
+                <InputTextArea id="information" class="form-control" @bind-Value="mineral.Information" />
+                <ValidationMessage For="@(() => mineral.Information)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="locations" class="form-label">Lokality</label>
+                <InputText id="locations" class="form-control" @bind-Value="mineral.Locations" />
+                <ValidationMessage For="@(() => mineral.Locations)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="properties" class="form-label">Vlastnosti</label>
+                <InputTextArea id="properties" class="form-control" @bind-Value="mineral.Properties" />
+                <ValidationMessage For="@(() => mineral.Properties)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Upraviť minerál</button>
+        </EditForm>
+
+        @if (submissionFailed)
+        {
+            <div class="alert alert-danger mt-3">
+                Nepodarilo sa upraviť minerál. Skúste to znova.
+            </div>
+        }
+        else if (submissionSucceeded)
+        {
+            <div class="alert alert-success mt-3">
+                Minerál bol úspešne upravený.
+            </div>
+        }
     }
-    else if (submissionSucceeded)
+    else
     {
-        <div class="alert alert-success mt-3">
-            Minerál bol úspešne upravený.
-        </div>
+        <p class="alert alert-warning">Nemáte oprávnenie na úpravu tohto minerálu. Kontaktujte administrátora.</p>
     }
 </div>
 
@@ -65,10 +74,23 @@
     private Mineral mineral = new();
     private bool submissionFailed = false;
     private bool submissionSucceeded = false;
+    private bool isUserAuthenticated = false;
+    private bool isUserAdmin = false;
 
     protected override async Task OnInitializedAsync()
     {
-        mineral = await MineralService.GetMineralByIdAsync(Id);
+        var userId = await AuthService.GetUserIdAsync();
+        isUserAuthenticated = userId != null;
+        isUserAdmin = isUserAuthenticated && await UserService.IsUserAdminAsync();
+
+        if (!isUserAuthenticated || !isUserAdmin)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            mineral = await MineralService.GetMineralByIdAsync(Id);
+        }
     }
 
     private async Task HandleSubmit()
