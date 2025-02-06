@@ -95,19 +95,29 @@ namespace BlazorApp.Services
             }
         }
 
-        public async Task<bool> AddCollectionItemAsync(CollectionItem collectionItem)
+        public async Task<CollectionItem> AddCollectionItemAsync(CollectionItem collectionItem)
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("api/CollectionItem", collectionItem);
-                return response.IsSuccessStatusCode;
+                var response = await _httpClient.PostAsJsonAsync("api/CollectionItem/", collectionItem);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<CollectionItem>();
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Error: {ex.Message}");
-                return false;
+                return null;
             }
         }
+
+
 
         public async Task<bool> RemoveCollectionItemAsync(int collectionItemId)
         {

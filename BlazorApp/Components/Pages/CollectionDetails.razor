@@ -2,6 +2,7 @@
 @inject CollectionService CollectionService
 @inject MineralService MineralService
 @inject IJSRuntime JSRuntime
+@inject IWebHostEnvironment WebHostEnvironment
 @rendermode InteractiveServer
 
 <PageTitle>Detaily kolekcie</PageTitle>
@@ -22,13 +23,13 @@
             {
                 <div class="col mb-4">
                     <div class="card d-flex flex-column" style="max-width: 18rem; height: 100%;">
-                        <img src="@($"/images/{item.Mineral.Name}.jpg")" class="card-img-top" alt="@item.Mineral.Name" style="height: 180px; object-fit: cover;" />
+                        <img src="@GetMineralImageSrc(item)" class="card-img-top" alt="@item.Mineral.Name" style="height: 180px; object-fit: cover;" />
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">@item.Mineral.Name</h5>
-                            <p class="card-text flex-grow-1">@item.UserDescription</p> 
+                            <p class="card-text flex-grow-1">@item.UserDescription</p>
                             <p><strong>Množstvo:</strong> @item.Quantity</p>
                             <button class="btn btn-link p-0" @onclick="() => RemoveMineral(item.Id)">
-                                <i class="fa fa-trash-alt text-danger"></i> 
+                                <i class="fa fa-trash-alt text-danger"></i>
                             </button>
                         </div>
                     </div>
@@ -65,7 +66,24 @@
                             <label for="quantity">Množstvo</label>
                             <input type="number" id="quantity" class="form-control" @bind="quantity" min="1" />
                         </div>
+                        <div class="form-group mt-2">
+                            <label for="mineralImage">Obrázok minerálu</label>
+                            <InputFile id="mineralImage" OnChange="HandleMineralImageUpload" />
+                            @if (isImageTooLarge)
+                            {
+                                <div class="alert alert-danger mt-2">
+                                    Obrázok je príliš veľký! Maximálna povolená veľkosť je 500 KB.
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(errorMessage))
+                            {
+                                <div class="alert alert-danger mt-2">
+                                    @errorMessage
+                                </div>
+                            }
+                        </div>
                     </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @onclick="HideAddMineralModal">Zavrieť</button>
                         <button type="button" class="btn btn-primary" @onclick="AddMineral">Pridať</button>
@@ -100,6 +118,9 @@
     private bool isAddMineralModalVisible = false;
     private string? errorMessage;
     private string? successMessage;
+    private bool isImageTooLarge = false;
+    private const long MaxImageSize = 500 * 1024;
+    private IBrowserFile? uploadedMineralImage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,6 +144,14 @@
             return;
         }
 
+        if (quantity < 1)
+        {
+            errorMessage = "Množstvo musí byť aspoň 1.";
+            successMessage = null;
+            StateHasChanged();
+            return;
+        }
+
         var newCollectionItem = new CollectionItem
             {
                 CollectionId = CollectionId,
@@ -132,21 +161,74 @@
                 AddedAt = DateTime.Now
             };
 
-        var success = await CollectionService.AddCollectionItemAsync(newCollectionItem);
+        var createdCollectionItem = await CollectionService.AddCollectionItemAsync(newCollectionItem);
 
-        if (success)
+        if (createdCollectionItem != null)
         {
+            if (uploadedMineralImage != null)
+            {
+                try
+                {
+                    var uploadPath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "collectionitem");
+
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+
+                    var filePath = Path.Combine(uploadPath, $"{createdCollectionItem.Id}.jpg");
+
+                    await using var fileStream = new FileStream(filePath, FileMode.Create);
+                    await uploadedMineralImage.OpenReadStream().CopyToAsync(fileStream);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Chyba pri ukladaní obrázka: {ex.Message}");
+                }
+            }
+
             collectionItems = await CollectionService.GetCollectionItemsAsync(CollectionId);
-            successMessage = "Minerál bol úspešne pridaný do kolekcie.";
-            errorMessage = null;
+
             HideAddMineralModal();
-            StateHasChanged();
+            successMessage = "Minerál bol úspešne pridaný.";
+            errorMessage = null;
         }
         else
         {
             errorMessage = "Nepodarilo sa pridať minerál.";
             successMessage = null;
-            StateHasChanged();
+        }
+
+        StateHasChanged();
+    }
+
+    private void HandleMineralImageUpload(InputFileChangeEventArgs e)
+    {
+        uploadedMineralImage = e.File;
+        if (uploadedMineralImage != null)
+        {
+            if (uploadedMineralImage.Size > MaxImageSize)
+            {
+                isImageTooLarge = true;
+            }
+            else
+            {
+                isImageTooLarge = false;
+            }
+        }
+    }
+
+    private string GetMineralImageSrc(CollectionItem item)
+    {
+        var filePath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "collectionitem", $"{item.Id}.jpg");
+
+        if (File.Exists(filePath))
+        {
+            return $"/images/collectionitem/{item.Id}.jpg";
+        }
+        else
+        {
+            return $"/images/{item.Mineral.Name}.jpg";
         }
     }
 
@@ -156,6 +238,20 @@
 
         if (success)
         {
+            var filePath = Path.Combine(WebHostEnvironment.WebRootPath, "images", "collectionitem", $"{collectionItemId}.jpg");
+
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Chyba pri vymazávaní obrázka: {ex.Message}");
+                }
+            }
+
             collectionItems = await CollectionService.GetCollectionItemsAsync(CollectionId);
             successMessage = "Minerál bol úspešne odstránený z kolekcie.";
             errorMessage = null;

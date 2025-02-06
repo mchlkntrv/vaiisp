@@ -44,18 +44,18 @@
             return CreatedAtAction(nameof(GetCollectionItem), new { collectionId = collectionItem.CollectionId, mineralId = collectionItem.MineralId }, collectionItem);
         }
 
-        // DELETE: api/CollectionItem/5/10
-        [HttpDelete("{collectionId}/{mineralId}")]
-        public async Task<ActionResult> DeleteCollectionItem(int collectionId, int mineralId)
-        {
-            var collectionItem = await _collectionItemService.GetCollectionItemAsync(collectionId, mineralId);
-            if (collectionItem == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/CollectionItem/5/10
+        //[HttpDelete("{collectionId}/{mineralId}")]
+        //public async Task<ActionResult> DeleteCollectionItem(int collectionId, int mineralId)
+        //{
+        //    var collectionItem = await _collectionItemService.GetCollectionItemAsync(collectionId, mineralId);
+        //    if (collectionItem == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            await _collectionItemService.DeleteCollectionItemAsync(collectionId, mineralId);
-            return NoContent();
-        }
+        //    await _collectionItemService.DeleteCollectionItemAsync(collectionId, mineralId);
+        //    return NoContent();
+        //}
     }
 }
