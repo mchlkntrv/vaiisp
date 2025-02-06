@@ -16,15 +16,24 @@
     {
         <p>Pre zobrazenie kolekcii sa prihláste.</p>
         <div class="mt-4">
-            <button class="btn btn-primary" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
-            <button class="btn btn-secondary ml-2" @onclick="NavigateToRegisterPage">Registrovať sa</button>
+            <button class="btn btn-primary d-none d-md-inline" @onclick="NavigateToLoginPage">Prihlásiť sa</button>
+            <button class="btn btn-secondary ml-2 d-none d-md-inline" @onclick="NavigateToRegisterPage">Registrovať sa</button>
+            <button class="btn btn-primary d-md-none" @onclick="NavigateToLoginPage">
+                <i class="fas fa-sign-in-alt"></i>
+            </button>
+            <button class="btn btn-secondary ml-2 d-md-none" @onclick="NavigateToRegisterPage">
+                <i class="fas fa-user-plus"></i>
+            </button>
         </div>
     }
     else if (userCollections == null || !userCollections.Any())
     {
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <button class="btn btn-primary" @onclick="OpenCreateModal">
+            <button class="btn btn-primary d-none d-md-inline" @onclick="OpenCreateModal">
                 <i class="fas fa-plus" title="Pridať novú kolekciu"></i>
+            </button>
+            <button class="btn btn-primary d-md-none" @onclick="OpenCreateModal">
+                <i class="fas fa-plus"></i>
             </button>
         </div>
 
@@ -33,11 +42,16 @@
     else
     {
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <button class="btn btn-primary" @onclick="OpenCreateModal">
+            <button class="btn btn-primary d-none d-md-inline" @onclick="OpenCreateModal">
                 <i class="fas fa-plus" title="Pridať novú kolekciu"></i>
             </button>
-            <button class="btn btn-success" @onclick="ExportToCsv">Exportovať ako CSV</button>
-
+            <button class="btn btn-primary d-md-none" @onclick="OpenCreateModal">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="btn btn-success d-none d-md-inline" @onclick="ExportToCsv">Exportovať ako CSV</button>
+            <button class="btn btn-success d-md-none" @onclick="ExportToCsv">
+                <i class="fas fa-file-csv"></i>
+            </button>
         </div>
 
         <div class="row">
@@ -55,9 +69,18 @@
                                 <p class="text-muted">Vytvorené: @collection.CreatedAt.ToString("dd.MM.yyyy")</p>
 
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-primary" @onclick="() => NavigateToCollectionDetails(collection.Id)">Zobraziť kolekciu</button>
-                                    <button class="btn btn-primary ms-2" @onclick="() => OpenEditModal(collection)">Upraviť</button>
-                                    <button class="btn btn-warning ms-2" @onclick="() => ShowDeleteConfirmation(collection)">Vymazať</button>
+                                    <button class="btn btn-primary d-none d-md-inline" @onclick="() => NavigateToCollectionDetails(collection.Id)">Zobraziť kolekciu</button>
+                                    <button class="btn btn-primary ms-2 d-none d-md-inline" @onclick="() => OpenEditModal(collection)">Upraviť</button>
+                                    <button class="btn btn-warning ms-2 d-none d-md-inline" @onclick="() => ShowDeleteConfirmation(collection)">Vymazať</button>
+                                    <button class="btn btn-primary d-md-none" @onclick="() => NavigateToCollectionDetails(collection.Id)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-primary ms-2 d-md-none" @onclick="() => OpenEditModal(collection)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-warning ms-2 d-md-none" @onclick="() => ShowDeleteConfirmation(collection)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
