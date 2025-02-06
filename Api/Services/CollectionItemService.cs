@@ -14,9 +14,14 @@
             return await _collectionItemRepository.GetAllCollectionItemsAsync();
         }
 
-        public async Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId)
+        //public async Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId)
+        //{
+        //    return await _collectionItemRepository.GetCollectionItemAsync(collectionId, mineralId);
+        //}
+
+        public async Task<CollectionItem> GetCollectionItemAsync(int collectionItemId)
         {
-            return await _collectionItemRepository.GetCollectionItemAsync(collectionId, mineralId);
+            return await _collectionItemRepository.GetCollectionItemAsync(collectionItemId);
         }
 
         public async Task CreateCollectionItemAsync(CollectionItem collectionItem)

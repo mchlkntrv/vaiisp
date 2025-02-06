@@ -7,7 +7,9 @@
     public interface ICollectionItemService
     {
         Task<List<CollectionItem>> GetAllCollectionItemsAsync();
-        Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId);
+        //Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId);
+        Task<CollectionItem> GetCollectionItemAsync(int collectionItemId);
+
         Task CreateCollectionItemAsync(CollectionItem collectionItem);
         Task DeleteCollectionItemAsync(int collectionId, int mineralId);
     }

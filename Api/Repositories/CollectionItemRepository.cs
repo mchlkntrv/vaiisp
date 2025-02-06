@@ -15,10 +15,16 @@
             return await _context.CollectionItems.ToListAsync();
         }
 
-        public async Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId)
+        //public async Task<CollectionItem> GetCollectionItemAsync(int collectionId, int mineralId)
+        //{
+        //    return await _context.CollectionItems
+        //        .FirstOrDefaultAsync(ci => ci.CollectionId == collectionId && ci.MineralId == mineralId);
+        //}
+
+        public async Task<CollectionItem> GetCollectionItemAsync(int collectionItemId)
         {
             return await _context.CollectionItems
-                .FirstOrDefaultAsync(ci => ci.CollectionId == collectionId && ci.MineralId == mineralId);
+                .FirstOrDefaultAsync(ci => ci.Id == collectionItemId);
         }
 
         public async Task CreateCollectionItemAsync(CollectionItem collectionItem)

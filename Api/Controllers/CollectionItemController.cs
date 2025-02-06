@@ -22,11 +22,25 @@
             return Ok(collectionItems);
         }
 
-        // GET: api/CollectionItem/5/10
-        [HttpGet("{collectionId}/{mineralId}")]
-        public async Task<ActionResult<CollectionItem>> GetCollectionItem(int collectionId, int mineralId)
+        //// GET: api/CollectionItem/5/10
+        //[HttpGet("{collectionId}/{mineralId}")]
+        //public async Task<ActionResult<CollectionItem>> GetCollectionItem(int collectionId, int mineralId)
+        //{
+        //    var collectionItem = await _collectionItemService.GetCollectionItemAsync(collectionId, mineralId);
+
+        //    if (collectionItem == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(collectionItem);
+        //}
+
+        // GET: api/CollectionItem/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CollectionItem>> GetCollectionItem(int id)
         {
-            var collectionItem = await _collectionItemService.GetCollectionItemAsync(collectionId, mineralId);
+            var collectionItem = await _collectionItemService.GetCollectionItemAsync(id);
 
             if (collectionItem == null)
             {
@@ -36,12 +50,15 @@
             return Ok(collectionItem);
         }
 
+
         // POST: api/CollectionItem
         [HttpPost]
         public async Task<ActionResult> CreateCollectionItem(CollectionItem collectionItem)
         {
             await _collectionItemService.CreateCollectionItemAsync(collectionItem);
-            return CreatedAtAction(nameof(GetCollectionItem), new { collectionId = collectionItem.CollectionId, mineralId = collectionItem.MineralId }, collectionItem);
+            return CreatedAtAction(nameof(GetCollectionItem), new { id = collectionItem.Id }, collectionItem);
+
+            //return CreatedAtAction(nameof(GetCollectionItem), new { collectionId = collectionItem.CollectionId, mineralId = collectionItem.MineralId }, collectionItem);
         }
 
         //// DELETE: api/CollectionItem/5/10
